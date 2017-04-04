@@ -9,4 +9,7 @@ class Telefone {
             this.uid = generatePushID();
         this.numero = _numero;
     }
+    toJSON() {
+        return this.uid + ":" + this.numero;
+    }
 }
