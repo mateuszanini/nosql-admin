@@ -3,25 +3,28 @@ class Empresa {
     // constructor(_nomeFantasia, _razaoSocial, _cnpj, _inscricaEstadual, _inscricaoMunicipal, _endereco, _telefones, _emails) {
     constructor(_dados) {
         try {
-            this.nomeFantasia = _dados.nomeFantasia;
-            this.razaoSocial = _dados.razaoSocial;
-            this.cnpj = _dados.cnpj;
-            this.inscricaEstadual = _dados.inscricaEstadual;
-            this.inscricaoMunicipal = _dados.inscricaoMunicipal;
-            this.endereco = new Endereco(_dados.endereco);
-            this.telefones = [];
-            for (var i = 0; i < _dados.telefones.length; i++) {
-                this.telefones.push(new Telefone(_dados.telefones[i]))
+            if (_dados.nomeFantasia) this.nomeFantasia = _dados.nomeFantasia;
+            if (_dados.razaoSocial) this.razaoSocial = _dados.razaoSocial;
+            if (_dados.cnpj) this.cnpj = _dados.cnpj;
+            if (_dados.inscricaEstadual) this.inscricaEstadual = _dados.inscricaEstadual;
+            if (_dados.inscricaoMunicipal) this.inscricaoMunicipal = _dados.inscricaoMunicipal;
+            if (_dados.endereco) this.endereco = new Endereco(_dados.endereco);
+            if (_dados.telefones) {
+                this.telefones = [];
+                for (var i = 0; i < _dados.telefones.length; i++) {
+                    this.telefones.push(new Telefone(_dados.telefones[i]))
+                }
             }
-            this.emails = [];
-            for (var i = 0; i < _dados.emails.length; i++) {
-                this.emails.push(new Email(_dados.emails[i]))
+            if (_dados.emails) {
+                this.emails = [];
+                for (var i = 0; i < _dados.emails.length; i++) {
+                    this.emails.push(new Email(_dados.emails[i]))
+                }
             }
             //campos de controle
             this.ativo = true;
             this.createdAt = new Date().getTime();
             this.updatedAt = null;
-
             //relacionamentos
         }
         catch (err) {
@@ -32,35 +35,39 @@ class Empresa {
     }
 
     save() {
-        // {
-        //   "nomeFantasia":"ifc videira",
-        //   "razaoSocial":"IFC",
-        //   "cnpj":234565432,
-        //   "endereco":
-        //   {
-        //   "logradouro":"rua sem saida",
-        //   "numero":453,
-        //   "cep":"89.560-000"
+        var saida = '{';
+        if (this.nomeFantasia) saida += "\"nomeFantasia\":\"" + this.nomeFantasia + "\"";
+        if (this.razaoSocial) saida += ",\"razaoSocial\":\"" + this.razaoSocial + "\"";
+        if (this.cnpj) saida += ",\"cnpj\":\"" + this.cnpj + "\"";
+        if (this.inscricaEstadual) saida += ",\"inscricaEstadual\":\"" + this.inscricaEstadual + "\"";
+        if (this.inscricaoMunicipal) saida += ",\"inscricaoMunicipal\":\"" + this.inscricaoMunicipal + "\"";
+        if (this.endereco) saida += ",\"endereco\":" + JSON.stringify(this.endereco);
+        if (this.telefones) {
+            saida += ",\"telefones\":{"
+            for (var i = 0; i < this.telefones.length; i++) {
+                saida += "\"" + this.telefones[i].uid + "\":\"" + this.telefones[i].numero + "\",";
+            }
+            saida = saida.slice(0, -1);
+            saida += "}";
+        }
+        if (this.emails) {
+            saida += ",\"emails\":{"
+            for (var i = 0; i < this.emails.length; i++) {
+                saida += "\"" + this.emails[i].uid + "\":\"" + this.emails[i].email + "\",";
+            }
+            saida = saida.slice(0, -1);
+            saida += "}";
+        }
 
-        //   },
-        //   "telefones": {
-        //     "-KgtVnBA32Po702fV4EQ":"49 91347498",
-        //     "-KgtVnBA32Po702fV4ER":"49 3533 4043"
-        //   },
-        //   "emails":{
-        //     "-KgtVnBB1HtCX59KY6mw":"tiago.possato@yahoo.com.br"
-        //   },
-        //   "ativo": true,
-        //   "createdAt":1491318551308,
-        //   "updatedAt":null
+        saida += ",\"ativo\":" + this.ativo;
+        saida += ",\"createdAt\":" + this.createdAt;
+        if (this.updatedAt) saida += ",\"updatedAt\":" + this.updatedAt;
 
-        var saida = JSON.stringify(this);
-        saida = saida.replace('[', '{');
-        saida = saida.replace(']', '}');
+        saida += "}";
 
         console.log(saida);
-        // Cria uma chave para a empresa
-        // var newEmpresaKey = firebase.database().ref().child('empresas').push().key;
+
+       // var newEmpresaKey = firebase.database().ref().child('empresas').push().key;
 
         // // Write the new post's data simultaneously in the posts list and the user's post list.
         // var updates = {};
