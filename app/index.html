@@ -12,72 +12,96 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" sizes="192x192" href="images/android-desktop.png">
 
-    <!-- Compiled and minified CSS -->
+    <!-- Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
 
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <style>
-        /* label color */
-        
-        .input-field label {
-            color: #BDBDBD;
-        }
-        /* label focus color */
-        
-        .input-field input.login:focus+label {
-            color: #42a5f5;
-        }
-        /* label underline focus color */
-        
-        .input-field input.login:focus {
-            border-bottom: 1px solid #42a5f5;
-            box-shadow: 0 1px 0 0 #42a5f5;
-        }
-        /* icon prefix focus color */
-        
-        .input-field .prefix.login {
-            color: #BDBDBD;
-        }
-        
-        .input-field .prefix.login.active {
-            color: #42a5f5;
-        }
-    </style>
+    <!-- CSS próprio -->
+    <link href="assets/css/style.css" rel="stylesheet">
+
 </head>
 
 <body class="blue lighten-1">
-    <div class="row">
-        <div class="col s4 push-s4">
+
+    <!-- Indicador de carregamento -->
+    <div class="row center-align" id="preloaderCarregando">
+        <div class="preloader-wrapper active">
+            <div class="spinner-layer spinner-red-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel de login -->
+    <div class="row hide" id="painelLogin">
+        <div class="col s10 m6 l4 offset-s1 offset-m3 offset-l4">
 
             <div class="row">
-                <div class="col s12">
-                    <div class="card-panel">
-
+                <div class="col s12 m12 l12">
+                    <div class="card-panel z-depth-4">
                         <div class="row">
-                            <form class="col s12">
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <i class="material-icons prefix login">email</i>
-                                        <input id="icon_prefix" type="email" class="validate login">
-                                        <label for="icon_prefix" data-error="Email inválido" data-success="">Email</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <i class="material-icons prefix login">vpn_key</i>
-                                        <input id="icon_password" type="password" class="validate login">
-                                        <label for="icon_password">Senha</label>
-                                    </div>
-                                </div>
-                            </form>
-                            <a class="waves-effect waves-light btn blue lighten-1 col s12">Login</a>
+                            <div class="col s8 m6 l4 offset-s2 offset-m3 offset-l4">
+                                <img class="responsive-img" src="assets/img/logo.png">
+                            </div>
                         </div>
-                        
+                        <div class="row">
+                            <form class="col s12 m12 l12">
+                                <div class="row">
+                                    <div class="input-field col s12 m12 l12">
+                                        <!--<i class="material-icons prefix login">email</i>-->
+                                        <input id="email" type="email" name="email" class="validate login">
+                                        <label for="email" data-error="Email inválido" data-success="">Email</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12 m12 l12">
+                                        <!--<i class="material-icons prefix login">vpn_key</i>-->
+                                        <input id="senha" type="password" class="validate login">
+                                        <label for="senha">Senha</label>
+                                    </div>
+                                </div>
+                                <button class="btn waves-effect waves-light col s12 m12 l12 blue lighten-1" type="submit" name="action">Login</button>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <div class="col s12 m12 l12 center-align">
+                                <a href="#modalRecuperarSenha">Esqueci minha senha</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Modal de Recuperação de Senha -->
+    <div id="modalRecuperarSenha" class="modal">
+        <div class="modal-content">
+            <form class="col s12 m12 l12">
+                <div class="row">
+                    <div class="input-field col s12 m10 l8 offset-m1 offset-l2">
+                        <input id="email" type="email" name="email" class="validate login">
+                        <label for="email" data-error="Email inválido" data-success="">Email</label>
+                    </div>
+                    <div class="col s12 m10 l8 offset-m1 offset-l2">
+                        <button class="btn waves-effect waves-light col s12 m12 l12" type="submit" name="action">Recuperar senha</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-blue btn-flat">Cancelar</a>
         </div>
     </div>
 
@@ -87,6 +111,18 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <script src="assets/js/script.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#preloaderCarregando').addClass('hide');
+            $('#painelLogin').removeClass('hide');
+
+            $('#modalRecuperarSenha').modal({
+                dismissible: true
+            });
+        });
+    </script>
+
 </body>
 
 </html>
