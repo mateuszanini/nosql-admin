@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>NoSQL Admin</title>
+    <title>NoSQL | Admin</title>
+    <link rel="icon" href="assets/img/logo.png" />
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -70,7 +71,16 @@
                                         <label for="senha">Senha</label>
                                     </div>
                                 </div>
-                                <button class="btn waves-effect waves-light col s12 m12 l12 blue lighten-1" type="submit" name="action">Login</button>
+
+                                <!-- Mensagens de Alerta -->
+                                <div class="row center-align">
+                                    <div class="col s12 m12 l12" id="mensagem">
+
+                                    </div>
+                                </div>
+
+                                <a class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1" onclick="app.login()">Login</a>
+                                <!--<button class="btn waves-effect waves-light col s12 m12 l12 blue lighten-1" type="submit" name="action">Login</button>-->
                             </form>
                         </div>
                         <div class="row">
@@ -82,6 +92,9 @@
                 </div>
             </div>
 
+
+
+
         </div>
     </div>
 
@@ -91,11 +104,11 @@
             <form class="col s12 m12 l12">
                 <div class="row">
                     <div class="input-field col s12 m10 l8 offset-m1 offset-l2">
-                        <input id="email" type="email" name="email" class="validate login">
+                        <input id="emailRecuperarSenha" type="email" name="email" class="validate login" autofocus>
                         <label for="email" data-error="Email inválido" data-success="">Email</label>
                     </div>
                     <div class="col s12 m10 l8 offset-m1 offset-l2">
-                        <button class="btn waves-effect waves-light col s12 m12 l12 blue lighten-1" type="submit" name="action">Recuperar senha</button>
+                        <a class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1" onclick="app.redefinirSenha()">Redefinir Senha</a>
                     </div>
                 </div>
             </form>
@@ -105,22 +118,36 @@
         </div>
     </div>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+
     <script src="assets/js/script.js"></script>
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#preloaderCarregando').addClass('hide');
-            $('#painelLogin').removeClass('hide');
+                                                                                                        $(document).ready(function () {
+                                                                                                            $('#preloaderCarregando').addClass('hide');
+                                                                                                            $('#painelLogin').removeClass('hide');
 
-            $('#modalRecuperarSenha').modal({
-                dismissible: true
-            });
-        });
+                                                                                                            $('#modalRecuperarSenha').modal({
+                                                                                                                dismissible: true
+                                                                                                            });
+                                                                                                        });
+
+                                                                                                        // Initialize Firebase
+                                                                                                        var config = {
+                                                                                                            apiKey: "AIzaSyDmTM3FMbTk9Agvb8A7h3slNcZ_TD8mW1A",
+                                                                                                            authDomain: "optativa-4f19a.firebaseapp.com",
+                                                                                                            databaseURL: "https://optativa-4f19a.firebaseio.com",
+                                                                                                            projectId: "optativa-4f19a",
+                                                                                                            storageBucket: "optativa-4f19a.appspot.com",
+                                                                                                            messagingSenderId: "675752807270"
+                                                                                                        };
+                                                                                                        firebase.initializeApp(config);
     </script>
 
 </body>
