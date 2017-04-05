@@ -13,8 +13,14 @@ var app = {
         var email = $('#email').val();
         var password = $('#senha').val();
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
-            .catch(function (error) {
+        firebase.auth().signInWithEmailAndPassword(email, password).then(
+            //sucesso
+            function () {
+                console.log("Logado");
+                app.verificaLogado();
+            },
+            //erro
+            function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-email') {
@@ -24,20 +30,34 @@ var app = {
                 } else if (errorCode === 'auth/user-disabled') {
                     app.mensagem('Esta conta foi desativada', 'error');
                 }
+                console.log(error);
             });
+        //https://firebase.google.com/docs/auth/web/manage-users 
+    },
 
-        //https://firebase.google.com/docs/auth/web/manage-users   
-        var user = firebase.auth().currentUser;
+    logout: function () {
+        firebase.auth().signOut().then(function () {
+            console.log("Desconectado");
+            app.verificaLogado();
+        }, function (error) {
+            console.log("Erro ao desconectar");
+        });
+    },
 
-        if (user != null) {
-            user.providerData.forEach(function (profile) {
-                console.log("Sign-in provider: " + profile.providerId);
-                console.log("  Provider-specific UID: " + profile.uid);
-                console.log("  Name: " + profile.displayName);
-                console.log("  Email: " + profile.email);
-                console.log("  Photo URL: " + profile.photoURL);
-            });
-        }
+    verificaLogado: function () {
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                console.log("Está logado");
+                $('#bg').addClass('hide');
+                $('#conteudo').removeClass('hide');
+                //var user = firebase.auth().currentUser;
+                 $('#usrLogado').html("Conectado como <b>" + user.email + "</b>");
+            } else {
+                console.log("Não está logado");
+                $('#bg').removeClass('hide');
+                $('#conteudo').addClass('hide');
+            }
+        });       
     },
 
     redefinirSenha: function () {
