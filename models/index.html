@@ -1,29 +1,50 @@
 <!DOCTYPE html>
 <html>
 
+
+<script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDmTM3FMbTk9Agvb8A7h3slNcZ_TD8mW1A",
+    authDomain: "optativa-4f19a.firebaseapp.com",
+    databaseURL: "https://optativa-4f19a.firebaseio.com",
+    projectId: "optativa-4f19a",
+    storageBucket: "optativa-4f19a.appspot.com",
+    messagingSenderId: "675752807270"
+  };
+  firebase.initializeApp(config);
+
+</script>
+
 <script type="text/javascript" src="generate-pushid.js"></script>
-<script type="text/javascript" src="Email.js"></script>
 <script type="text/javascript" src="Endereco.js"></script>
-<script type="text/javascript" src="Telefone.js"></script>
 <script type="text/javascript" src="Empresa.js"></script>
 <script>
-
-var end = {
+  var end = {
     logradouro: 'rua sem saida',
     numero: 453,
     cep: '89.560-000'
-};
-var tel = ['49 91347498', '49 3533 4043'];
-var email = ['tiago.possato@yahoo.com.br'];
+  };
+  var tel = ['49 91347498', '49 3533 4043'];
+  var email = ['tiago.possato@yahoo.com.br'];
 
-var e = new Empresa({
+  var e = new Empresa({
     nomeFantasia: 'ifc videira',
     razaoSocial: 'IFC',
     cnpj: 234565432,
     endereco: end,
     telefones: tel,
     emails: email
-});
+  });
+  
+  e.save().then(function (dados) {
+    console.log("then");
+    console.log(dados);
+  }).catch(function (err) {
+    console.log("catch");
+    console.log(err);
+  });
 
 </script>
 

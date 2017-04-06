@@ -5,14 +5,14 @@
 class Endereco {
     constructor(_dados) {
         try {
-            this.logradouro = _dados.logradouro;
-            this.numero = _dados.numero;
-            this.complemento = _dados.complemento;
-            this.bairro = _dados.bairro;
-            this.cep = _dados.cep;
-            this.cidade = _dados.cidade;
-            this.estado = _dados.estado;
-            this.pais = _dados.pais;
+            if (_dados.logradouro) this.logradouro = _dados.logradouro;
+            if (_dados.numero) this.numero = _dados.numero;
+            if (_dados.complemento) this.complemento = _dados.complemento;
+            if (_dados.bairro) this.bairro = _dados.bairro;
+            if (_dados.cep) this.cep = _dados.cep;
+            if (_dados.cidade) this.cidade = _dados.cidade;
+            if (_dados.estado) this.estado = _dados.estado;
+            if (_dados.pais) this.pais = _dados.pais;
         }
         catch (err) {
             throw err;
