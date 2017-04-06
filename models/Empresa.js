@@ -4,7 +4,7 @@ class Empresa {
 			if (_dados.nomeFantasia) this.nomeFantasia = _dados.nomeFantasia;
 			if (_dados.razaoSocial) this.razaoSocial = _dados.razaoSocial;
 			if (_dados.cnpj) this.cnpj = _dados.cnpj;
-			if (_dados.inscricaEstadual) this.inscricaEstadual = _dados.inscricaEstadual;
+			if (_dados.inscricaoEstadual) this.inscricaoEstadual = _dados.inscricaoEstadual;
 			if (_dados.inscricaoMunicipal) this.inscricaoMunicipal = _dados.inscricaoMunicipal;
 			if (_dados.endereco) this.endereco = _dados.endereco;
 			if (_dados.telefones) this.telefones = _dados.telefones;
@@ -13,6 +13,14 @@ class Empresa {
 			this.ativo = true;
 			if (_dados.createdAt) this.createdAt = _dados.createdAt;
 			else this.createdAt = new Date().getTime();
+
+			if (_dados.uid) {
+				this.uid = _dados.uid;
+			}
+			else {
+				this.uid = firebase.database().ref().child('empresas').push().key;
+				this.save();
+			}
 
 			//this.updatedAt = null;
 			//relacionamentos
@@ -25,25 +33,30 @@ class Empresa {
 	save() {
 		let empresa = this;
 		try {
-			/*Pega instancia do firebase*/
-			var database = firebase.database();
-			/*Cria uma nova chave para o objeto*/
-			var newEmpresaKey = empresa.key
-			if (newEmpresaKey == undefined) {
-				newEmpresaKey = firebase.database().ref().child('empresas').push().key;
-			} else {
-				empresa.updatedAt = new Date().getTime();
-			}
-			/*Salva os dados no firebase, retornando uma promise void*/
-			var oldEmpresaKey = empresa.key;
-			/*Apaga chave para não salvar */
-			delete empresa.key;
-			return firebase.database().ref('empresas/' + newEmpresaKey).set(empresa,
+
+			// /*Pega instancia do firebase*/
+			// var database = firebase.database();
+			// /*Cria uma nova chave para o objeto*/
+			// var newEmpresaKey = empresa.uid
+			// if (newEmpresaKey == undefined) {
+			// 	newEmpresaKey = firebase.database().ref().child('empresas').push().key;
+			// } else {
+			// 	empresa.updatedAt = new Date().getTime();
+			// }
+			// /*Salva os dados no firebase, retornando uma promise void*/
+			// //var oldEmpresaKey = empresa.uid;
+			// /*Apaga chave para não salvar */
+			// //delete empresa.uid;
+
+			if (empresa.uid) empresa.updatedAt = new Date().getTime();
+
+			// return firebase.database().ref('empresas/' + newEmpresaKey).set(empresa,
+			return firebase.database().ref('empresas/' + empresa.uid).set(empresa,
 				function (err) {
 					if (err == null) {
-						empresa.key = newEmpresaKey;
+						//empresa.uid = newEmpresaKey;
 					} else {
-						empresa.key = oldEmpresaKey;
+						//empresa.uid = oldEmpresaKey;
 					}
 				});
 		} catch (err) {
@@ -56,20 +69,29 @@ class Empresa {
 	}
 }
 
-var Empresas = {}
 
-firebase.database().ref('empresas').on('child_added', function (dados) {
-	Empresas[dados.key] = new Empresa(dados.val());
-	Empresas[dados.key].key = dados.key;
-});
+var Empresas = {
+	callbackAdded: null,
+	callbackChanged: null,
+	callbackRemoved: null,
+	init: function () {
+		//Adiciona observadores ao nó no firebase para manter a lista de empresas atualizada
+		firebase.database().ref('empresas').on('child_added', function (dados) {
+			Empresas[dados.key] = new Empresa(dados.val());
+			Empresas[dados.key].uid = dados.key;
+			if (typeof Empresas.callbackAdded == "function") Empresas.callbackAdded(Empresas[dados.key]);
+		});
 
-firebase.database().ref('empresas').on('child_changed', function (dados) {
-	Empresas[dados.key] = new Empresa(dados.val());
-	Empresas[dados.key].key = dados.key;
-	console.log(dados.val());
-});
+		firebase.database().ref('empresas').on('child_changed', function (dados) {
+			Empresas[dados.key] = new Empresa(dados.val());
+			Empresas[dados.key].uid = dados.key;
+			if (typeof Empresas.callbackChanged == "function") Empresas.callbackChanged(Empresas[dados.key]);
+		});
 
-firebase.database().ref('empresas').on('child_removed', function (dados) {
-	delete Empresas[dados.key];
-	console.log(dados.val());
-});
+		firebase.database().ref('empresas').on('child_removed', function (dados) {
+			delete Empresas[dados.uid];
+			if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados);
+		});
+	}
+};
+Empresas.init();

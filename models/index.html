@@ -17,38 +17,7 @@
 
 </script>
 
-<script type="text/javascript" src="generate-pushid.js"></script>
+<script type="text/javascript" src="util.js"></script>
 <script type="text/javascript" src="Empresa.js"></script>
-<script>
-  // var end = {
-  //   logradouro: 'rua sem saida',
-  //   numero: 453,
-  //   cep: '89.560-000'
-  // };
-
-  // var tel = ['49 91347498', '49 3533 4043'];
-  // var email = ['tiago.possato@yahoo.com.br'];
-  var e = new Empresa({
-    nomeFantasia: 'ifc videira',
-    razaoSocial: 'IFC',
-    cnpj: 234565432,
-    endereco: {
-      logradouro: 'rua sem saida',
-      numero: 453,
-      cep: '89.560-000'
-    },
-    telefones: ['49 91347498', '49 3533 4043'],
-    emails: ['tiago.possato@yahoo.com.br']
-  });
-
-  e.save().then(function () {
-    console.log("Objeto salvo");
-    console.log(e.key);
-  }).catch(function (err) {
-    console.log("catch");
-    console.log(err);
-  });
-
-</script>
-
+<script type="text/javascript" src="Usuario.js"></script>
 </html>

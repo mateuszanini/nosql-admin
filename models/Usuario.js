@@ -1,42 +1,61 @@
 class Usuario {
 	constructor(_dados) {
-		try {
-			if (_dados.nome) this.nome = _dados.nome;
-			if (_dados.tipo) this.tipo = _dados.tipo;
-			else this.tipo = "operador";
-			if (_dados.telefones) this.telefones = _dados.telefones;
-			//campos de controle
-			this.ativo = true;
-			if (_dados.createdAt) this.createdAt = _dados.createdAt;
-			else this.createdAt = new Date().getTime();
-		}
-		catch (err) {
-			console.log(err);
-		}
+		if (_dados.email) this.email = _dados.email;
+		else throw "Informe ao menos o email!";
+		if (_dados.nome) this.nome = _dados.nome;
+		if (_dados.tipo) this.tipo = _dados.tipo;
+		else this.tipo = "operador";
+		if (_dados.telefones) this.telefones = _dados.telefones;
+		//campos de controle
+		this.ativo = true;
+		if (_dados.createdAt) this.createdAt = _dados.createdAt;
+		else this.createdAt = new Date().getTime();
+
+		if (_dados.uid) this.uid = _dados.uid;
+
+		//se já existe um uid, significa que o usuário já foi criado no firebase
+		// e o objeto está sendo criado pelos observadores do nó usuarios
+		if (this.uid) return;
+
+		let usuario = this;
+		firebase.auth().createUserWithEmailAndPassword(this.email, guid())
+			.then(function (user) {
+				usuario.uid = user.uid;
+				usuario.save()
+					.then(function () {
+						firebase.auth().sendPasswordResetEmail(usuario.email);
+					})
+					.catch(function (err) {
+						alert(err);
+					});
+			})
+			.catch(function (error) {
+				// Handle Errors here.
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				if (errorCode == 'auth/email-already-in-use') {
+					alert('O Email já está em uso');
+				}
+				if (errorCode == 'auth/invalid-email') {
+					alert('O Email é inválido');
+				}
+				if (errorCode == 'auth/operation-not-allowed') {
+					alert('Operação não permitida');
+				}
+				console.log(error);
+			});
 	}
 
 	save() {
 		let usuario = this;
+		if (usuario.uid) usuario.updatedAt = new Date().getTime();
 		try {
-			/*Pega instancia do firebase*/
-			var database = firebase.database();
-			/*Cria uma nova chave para o objeto*/
-			var newUsuarioKey = usuario.key
-			if (newUsuarioKey == undefined) {
-				newUsuarioKey = firebase.database().ref().child('usuarios').push().key;
-			} else {
-				usuario.updatedAt = new Date().getTime();
-			}
-			/*Salva os dados no firebase, retornando uma promise void*/
-			var oldUsuarioKey = usuario.key;
-			/*Apaga chave para não salvar */
-			delete usuario.key;
-			return firebase.database().ref('usuarios/' + newUsuarioKey).set(usuario,
+			return firebase.database().ref().child('usuarios').child(usuario.uid).set(usuario,
 				function (err) {
 					if (err == null) {
-						usuario.key = newUsuarioKey;
+
 					} else {
-						usuario.key = oldUsuarioKey;
+
 					}
 				});
 		} catch (err) {
@@ -49,20 +68,47 @@ class Usuario {
 	}
 }
 
-var Usuarios = {}
+var Usuarios = {
+	callbackAdded: null,
+	callbackChanged: null,
+	callbackRemoved: null,
+	init: function () {
+		//Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
+		firebase.database().ref('usuarios').on('child_added', function (dados) {
+			Usuarios[dados.key] = new Usuario(dados.val());
+			Usuarios[dados.key].uid = dados.key;
+			if (typeof Usuarios.callbackAdded == "function") Usuarios.callbackAdded(Usuarios[dados.key]);
+		});
 
-firebase.database().ref('usuarios').on('child_added', function (dados) {
-	Usuarios[dados.key] = new Usuario(dados.val());
-	Usuarios[dados.key].key = dados.key;
-});
+		firebase.database().ref('usuarios').on('child_changed', function (dados) {
+			Usuarios[dados.key] = new Usuario(dados.val());
+			Usuarios[dados.key].uid = dados.key;
+			if (typeof Usuarios.callbackChanged == "function") Usuarios.callbackChanged(Usuarios[dados.key]);
+		});
 
-firebase.database().ref('usuarios').on('child_changed', function (dados) {
-	Usuarios[dados.key] = new Usuario(dados.val());
-	Usuarios[dados.key].key = dados.key;
-	console.log(dados.val());
-});
+		firebase.database().ref('usuarios').on('child_removed', function (dados) {
+			delete Usuarios[dados.uid];
+			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados);
+		});
+	}
+};
+Usuarios.init();
 
-firebase.database().ref('usuarios').on('child_removed', function (dados) {
-	delete Usuarios[dados.key];
-	console.log(dados.val());
-});
+// var Usuarios = {}
+
+// //Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
+// firebase.database().ref('usuarios').on('child_added', function (dados) {
+// 	Usuarios[dados.key] = new Usuario(dados.val());
+// 	Usuarios[dados.key].uid = dados.key;
+// });
+
+// firebase.database().ref('usuarios').on('child_changed', function (dados) {
+// 	Usuarios[dados.key] = new Usuario(dados.val());
+// 	Usuarios[dados.key].uid = dados.key;
+// 	console.log(dados.val());
+// });
+
+// firebase.database().ref('usuarios').on('child_removed', function (dados) {
+// 	delete Usuarios[dados.key];
+// 	console.log(dados.val());
+// });
