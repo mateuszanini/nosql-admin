@@ -29,7 +29,7 @@ class Empresa {
 			var database = firebase.database();
 			/*Cria uma nova chave para o objeto*/
 			var newEmpresaKey = empresa.key
-			if (!newEmpresaKey) {
+			if (newEmpresaKey == undefined) {
 				newEmpresaKey = firebase.database().ref().child('empresas').push().key;
 			} else {
 				empresa.updatedAt = new Date().getTime();
