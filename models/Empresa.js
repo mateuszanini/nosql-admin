@@ -14,6 +14,10 @@ class Empresa {
 			if (_dados.createdAt) this.createdAt = _dados.createdAt;
 			else this.createdAt = new Date().getTime();
 
+			//relacionamento com usuarios
+			if (_dados.usuarios) this.usuarios = _dados.usuarios;
+			else this.usuarios = [];
+
 			if (_dados.uid) {
 				this.uid = _dados.uid;
 			}
@@ -21,9 +25,6 @@ class Empresa {
 				this.uid = firebase.database().ref().child('empresas').push().key;
 				this.save();
 			}
-
-			//this.updatedAt = null;
-			//relacionamentos
 		}
 		catch (err) {
 			console.log(err);
@@ -65,6 +66,20 @@ class Empresa {
 					reject(err)
 				}
 			);
+		}
+	}
+	addUsuario(uid) {
+		if (this.usuarios.indexOf(uid) == -1) {
+			this.usuarios.push(uid);
+			Usuarios[uid].addEmpresa(this.uid);
+			this.save();
+		}
+	}
+	removeUsuario(uid) {
+		if (this.usuarios.indexOf(uid) > -1) {
+			this.usuarios.splice(this.usuarios.indexOf(uid), 1);
+			Usuarios[uid].removeEmpresa(this.uid);
+			this.save();
 		}
 	}
 }

@@ -11,8 +11,10 @@ class Usuario {
 		if (_dados.createdAt) this.createdAt = _dados.createdAt;
 		else this.createdAt = new Date().getTime();
 
+		//relacionamento com empresas
+		if (_dados.empresas) this.empresas = _dados.empresas;
+		else this.empresas = [];
 		if (_dados.uid) this.uid = _dados.uid;
-
 		//se já existe um uid, significa que o usuário já foi criado no firebase
 		// e o objeto está sendo criado pelos observadores do nó usuarios
 		if (this.uid) return;
@@ -66,6 +68,20 @@ class Usuario {
 			);
 		}
 	}
+	addEmpresa(uid){
+		if(this.empresas.indexOf(uid)==-1){
+			this.empresas.push(uid);
+			Empresas[uid].addUsuario(this.uid);
+			this.save();
+		}
+	}
+	removeEmpresa(uid){
+		if(this.empresas.indexOf(uid)>-1){
+			this.empresas.splice(this.empresas.indexOf(uid),1);
+			Empresas[uid].removeUsuario(this.uid);
+			this.save();
+		}
+	}
 }
 
 var Usuarios = {
@@ -93,22 +109,3 @@ var Usuarios = {
 	}
 };
 Usuarios.init();
-
-// var Usuarios = {}
-
-// //Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
-// firebase.database().ref('usuarios').on('child_added', function (dados) {
-// 	Usuarios[dados.key] = new Usuario(dados.val());
-// 	Usuarios[dados.key].uid = dados.key;
-// });
-
-// firebase.database().ref('usuarios').on('child_changed', function (dados) {
-// 	Usuarios[dados.key] = new Usuario(dados.val());
-// 	Usuarios[dados.key].uid = dados.key;
-// 	console.log(dados.val());
-// });
-
-// firebase.database().ref('usuarios').on('child_removed', function (dados) {
-// 	delete Usuarios[dados.key];
-// 	console.log(dados.val());
-// });
