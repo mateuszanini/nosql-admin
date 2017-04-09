@@ -23,11 +23,25 @@ class Empresa {
 			}
 			else {
 				this.uid = firebase.database().ref().child('empresas').push().key;
-				this.save();
+				let e = this;				
+				return new Promise(
+					function (resolve, reject) {												
+						e.save().then(function () {
+							resolve();
+						}).catch(function (err) {
+							reject(err);
+						});
+					}
+				);
+
 			}
 		}
 		catch (err) {
-			console.log(err);
+			return new Promise(
+				function (resolve, reject) {
+					reject(err)
+				}
+			);
 		}
 	}
 
@@ -51,7 +65,6 @@ class Empresa {
 
 			if (empresa.uid) empresa.updatedAt = new Date().getTime();
 
-			// return firebase.database().ref('empresas/' + newEmpresaKey).set(empresa,
 			return firebase.database().ref('empresas/' + empresa.uid).set(empresa,
 				function (err) {
 					if (err == null) {
@@ -70,9 +83,13 @@ class Empresa {
 	}
 	addUsuario(uid) {
 		if (this.usuarios.indexOf(uid) == -1) {
-			this.usuarios.push(uid);
-			Usuarios[uid].addEmpresa(this.uid);
-			this.save();
+			if (Usuarios[uid]) {
+				this.usuarios.push(uid);
+				Usuarios[uid].addEmpresa(this.uid);
+				this.save();
+			}else{
+				console.error("Usuário não encontrado!");
+			}
 		}
 	}
 	removeUsuario(uid) {

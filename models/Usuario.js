@@ -18,33 +18,42 @@ class Usuario {
 		//se já existe um uid, significa que o usuário já foi criado no firebase
 		// e o objeto está sendo criado pelos observadores do nó usuarios
 		if (this.uid) return;
-
 		let usuario = this;
-		firebase.auth().createUserWithEmailAndPassword(this.email, guid())
-			.then(function (user) {
-				usuario.uid = user.uid;
-				usuario.save()
-					.then(function () {
-						firebase.auth().sendPasswordResetEmail(usuario.email);
+		return new Promise(
+			function (resolve, reject) {
+				firebase.auth().createUserWithEmailAndPassword(usuario.email, guid())
+					.then(function (user) {
+						usuario.uid = user.uid;
+						console.log('Usuario: criado no firebase');
+						usuario.save()
+							.then(function () {
+								console.log('Usuario: nó inserido database do firebase');
+								firebase.auth().sendPasswordResetEmail(usuario.email)
+									.then(function () {
+										console.log('Usuario: Email para redefinicao de senha enviado');
+										resolve();
+									}).catch(function (err) {
+										reject(err);
+									});
+							}).catch(function (err) {
+								reject(err);
+							});
 					})
-					.catch(function (err) {
-						alert(err);
+					.catch(function (error) {
+						// Handle Errors here.
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						if (errorCode == 'auth/email-already-in-use') {
+							reject('O Email já está em uso');
+						}
+						if (errorCode == 'auth/invalid-email') {
+							reject('O Email é inválido');
+						}
+						if (errorCode == 'auth/operation-not-allowed') {
+							reject('Operação não permitida');
+						}
+						console.log(error);
 					});
-			})
-			.catch(function (error) {
-				// Handle Errors here.
-				var errorCode = error.code;
-				var errorMessage = error.message;
-				if (errorCode == 'auth/email-already-in-use') {
-					alert('O Email já está em uso');
-				}
-				if (errorCode == 'auth/invalid-email') {
-					alert('O Email é inválido');
-				}
-				if (errorCode == 'auth/operation-not-allowed') {
-					alert('Operação não permitida');
-				}
-				console.log(error);
 			});
 	}
 
@@ -68,16 +77,20 @@ class Usuario {
 			);
 		}
 	}
-	addEmpresa(uid){
-		if(this.empresas.indexOf(uid)==-1){
-			this.empresas.push(uid);
-			Empresas[uid].addUsuario(this.uid);
-			this.save();
+	addEmpresa(uid) {
+		if (this.empresas.indexOf(uid) == -1) {
+			if (Empresas[uid]) {
+				this.empresas.push(uid);
+				Empresas[uid].addUsuario(this.uid);
+				this.save();
+			} else {
+				console.log("Empresa não encontrada!");
+			}
 		}
 	}
-	removeEmpresa(uid){
-		if(this.empresas.indexOf(uid)>-1){
-			this.empresas.splice(this.empresas.indexOf(uid),1);
+	removeEmpresa(uid) {
+		if (this.empresas.indexOf(uid) > -1) {
+			this.empresas.splice(this.empresas.indexOf(uid), 1);
 			Empresas[uid].removeUsuario(this.uid);
 			this.save();
 		}
