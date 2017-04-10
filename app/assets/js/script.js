@@ -16,7 +16,7 @@ var app = {
         });
 
         // Initialize Firebase
-        var config = {
+        app.config = {
             apiKey: "AIzaSyDmTM3FMbTk9Agvb8A7h3slNcZ_TD8mW1A",
             authDomain: "optativa-4f19a.firebaseapp.com",
             databaseURL: "https://optativa-4f19a.firebaseio.com",
@@ -24,7 +24,7 @@ var app = {
             storageBucket: "optativa-4f19a.appspot.com",
             messagingSenderId: "675752807270"
         };
-        firebase.initializeApp(config);
+        firebase.initializeApp(app.config);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {

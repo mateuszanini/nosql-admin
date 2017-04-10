@@ -19,10 +19,15 @@ class Usuario {
 		// e o objeto está sendo criado pelos observadores do nó usuarios
 		if (this.uid) return;
 		let usuario = this;
+		let usuarioAtual = firebase.auth().currentUser;
+		let credential = firebase.auth().credential;
+
 		return new Promise(
 			function (resolve, reject) {
-				firebase.auth().createUserWithEmailAndPassword(usuario.email, guid())
+				let secondaryApp = firebase.initializeApp(app.config, "Secondary");
+				secondaryApp.auth().createUserWithEmailAndPassword(usuario.email, guid())
 					.then(function (user) {
+						secondaryApp.auth().signOut();
 						usuario.uid = user.uid;
 						console.log('Usuario: criado no firebase');
 						usuario.save()
