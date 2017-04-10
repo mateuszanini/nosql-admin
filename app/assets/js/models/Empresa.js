@@ -126,4 +126,3 @@ var Empresas = {
 		});
 	}
 };
-Empresas.init();

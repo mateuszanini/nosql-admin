@@ -121,4 +121,3 @@ var Usuarios = {
 		});
 	}
 };
-Usuarios.init();
