@@ -9,10 +9,21 @@ var app = {
             closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
             draggable: true // Choose whether you can drag to open on touch screens
         });
-        $('.button-collapse').sideNav('show');
+        //$('.button-collapse').sideNav('show');
 
         $('#modalRecuperarSenha').modal({
             dismissible: true
+        });
+
+        $(".dropdown-button").dropdown({
+            hover: true
+        });
+        
+        $(document).ready(function() {
+            $('.tooltipped').tooltip({
+                delay: 50,
+                position: 'top'
+            });
         });
 
         // Initialize Firebase

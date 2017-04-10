@@ -101,6 +101,41 @@
 
     <!-- CONTEUDO -->
     <div class="row hide" id="conteudo">
+        <nav class="nav-extended blue lighten-1">
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Logo</a>
+                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li>
+                </ul>
+                <ul class="side-nav" id="mobile-demo">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li>
+                </ul>
+            </div>
+            <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab"><a href="#test1">Usuários</a></li>
+                    <li class="tab"><a class="active" href="#test2">Empresas</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div id="test1" class="col s12">Test 1</div>
+        <div id="test2" class="col s12">
+        <!-- Action Button de Cadastro -->
+        <div class="fixed-action-btn horizontal click-to-toggle">
+            <a class="btn-floating btn-large green">
+                <i class="material-icons">add</i>
+            </a>
+            <ul>
+                <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Novo usuário"><i class="material-icons">person</i></a></li>
+                <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Nova empresa"><i class="material-icons">work</i></a></li>
+            </ul>
+        </div></div>
+        
         <div class="col s12 m12 l12 center-align">
             <h4 id="usrLogado"></h4>
         </div>
