@@ -123,26 +123,19 @@
                 </ul>
             </div>
         </nav>
-        <div id="tabelaUsuarios" class="col s12">
-            <div>
-                <!--aqui vem a tabela de usuários-->
-                <div>
-                    <table class="table table-hover table-condensed" id="tb-usuarios">
-                        <thead>
-                            <tr>
-                                <th class="text-center">
-                                    Nome
-                                </th>
-                                <th class="text-center">
-                                    Tipo
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div id="tabelaUsuarios" class="col row s12">
+            <!--aqui vem a tabela de usuários-->
+            <table id="tb-usuarios" class="highlight">
+                <thead>
+                    <tr>
+                        <th class="text-center"> Nome </th>
+                        <th class="text-center"> Email </th>
+                        <th class="text-center"> Tipo </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
         <div id="test2" class="col s12">Test 2</div>
         <!-- Action Button de Cadastro -->
@@ -192,22 +185,20 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- data tables -->
-    <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
+    <!--<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+     <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>-->
 
     <script src="assets/js/script.js"></script>
     <script type="text/javascript" src="assets/js/models/util.js"></script>
     <script type="text/javascript" src="assets/js/models/Empresa.js"></script>
     <script type="text/javascript" src="assets/js/models/Usuario.js"></script>
-    <script type="text/javascript" src="assets/js/UsuariosController.js"></script>
+    <script type="text/javascript" src="assets/js/UsuarioController.js"></script>
 
     <script>
         $(document).ready(function () {
             app.initialize();
             Empresas.init();
             Usuarios.init();
-
-            $('#tb-usuarios').DataTable();
         });
     </script>
 

@@ -119,8 +119,8 @@ var Usuarios = {
 		});
 
 		firebase.database().ref('usuarios').on('child_removed', function (dados) {
-			delete Usuarios[dados.uid];
-			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados);
+			delete Usuarios[dados.key];
+			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados.key);
 		});
 	}
 };

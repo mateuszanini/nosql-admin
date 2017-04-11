@@ -121,8 +121,8 @@ var Empresas = {
 		});
 
 		firebase.database().ref('empresas').on('child_removed', function (dados) {
-			delete Empresas[dados.uid];
-			if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados);
+			delete Empresas[dados.key];
+			if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
 		});
 	}
 };
