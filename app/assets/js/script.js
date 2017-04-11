@@ -11,20 +11,20 @@ var app = {
         });
         //$('.button-collapse').sideNav('show');
 
-        $('#modalRecuperarSenha').modal({
-            dismissible: true
+        $('.modal').modal({
+            dismissible: false
         });
 
         $(".dropdown-button").dropdown({
             hover: true
         });
-        
-        $(document).ready(function() {
-            $('.tooltipped').tooltip({
-                delay: 50
+
+        $('.tooltipped').tooltip({
+            delay: 50
                 //position: 'top'
-            });
         });
+        
+        $('select').material_select();
 
         // Initialize Firebase
         app.config = {
@@ -43,10 +43,10 @@ var app = {
                 $('#preloaderCarregando').addClass('hide');
                 $('#bg').addClass('hide');
                 $('#conteudo').removeClass('hide');
-                
-                Usuarios.findOne(user.uid).then(function(usuario){
+
+                Usuarios.findOne(user.uid).then(function(usuario) {
                     $('.usrLogadoMenu').html('<i class="material-icons left">person</i>' + usuario.nome);
-                }).catch(function(err){
+                }).catch(function(err) {
                     console.log(err);
                 });
             }

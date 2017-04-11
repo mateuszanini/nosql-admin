@@ -139,13 +139,14 @@
                 <tbody>
                 </tbody>
             </table>
+
             <div class="fixed-action-btn">
-                <a id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Novo usuário">
+                <a href="#modalUsuario" id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário" onclick="UsuarioController.mostraModalNovo()">
                     <i class="material-icons">add</i>
                 </a>
             </div>
         </div>
-        
+
         <div id="tabEmpresas" class="col s12">
             <div class="fixed-action-btn">
                 <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
@@ -176,11 +177,66 @@
         </div>
     </div>
 
+    <!-- Modal Usuário -->
+    <div id="modalUsuario" class="modal modal-fixed-footer">
+        <form class="col s12" id="formUsuario">
+            <div class="modal-content">
+                <h4 id="tituloModalUsuario"></h4>
+                <div class="row">
+                    <div class="row">
+                        <div class="input-field col s12 m6 l6">
+                            <input id="nomeUsuario" name="nomeUsuario" type="text" class="validate">
+                            <label for="nomeUsuario">Nome</label>
+                        </div>
+                        <div class="input-field col s12 m6 l6">
+                            <input id="emailUsuario" name="emailUsuario" type="email" class="validate">
+                            <label for="emailUsuario" data-error="Email inválido" data-success="">Email</label>
+                        </div>
+
+                        <div class="input-field col s12 m12 l12">
+                            <select name="empresaUsuario" id="empresaUsuario" multiple>
+
+                            </select>
+                            <label>Empresa</label>
+                        </div>
+
+                        <div class="input-field col s12 m6 l6">
+                            <select name="tipoUsuario" id="tipoUsuario">
+                              <option value="admin">Administrador</option>
+                              <option value="gerente">Gerente</option>
+                              <option value="operador" selected>Operador</option>
+                            </select>
+                            <label for="tipoUsuario">Tipo</label>
+                        </div>
+
+                        <div class="input-field col s12 m6 l6">
+                            <div class="switch">
+                                <label>
+                                  Inativo
+                                  <input type="checkbox" name="ativoUsuario" id="ativoUsuario" checked>
+                                  <span class="lever"></span>
+                                  Ativo
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light blue lighten-1" type="submit" name="action" id="btnSalvaUsuario"></button>
+                <a href="#!" class="modal-action modal-close waves-effect btn-flat ">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- data tables -->

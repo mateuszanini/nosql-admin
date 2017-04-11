@@ -7,7 +7,8 @@ class Usuario {
 		else this.tipo = "operador";
 		if (_dados.telefones) this.telefones = _dados.telefones;
 		//campos de controle
-		this.ativo = true;
+		if (_dados.ativo) this.ativo = _dados.ativo;
+		else this.ativo = true;
 		if (_dados.createdAt) this.createdAt = _dados.createdAt;
 		else this.createdAt = new Date().getTime();
 
@@ -22,10 +23,11 @@ class Usuario {
 
 		return new Promise(
 			function(resolve, reject) {
-				let secondaryApp = firebase.initializeApp(app.config, "Secondary");
+				let secondaryApp = firebase.initializeApp(app.config,'secondaryApp');
 				secondaryApp.auth().createUserWithEmailAndPassword(usuario.email, guid())
 					.then(function(user) {
 						secondaryApp.auth().signOut();
+						secondaryApp = null;
 						usuario.uid = user.uid;
 						console.log('Usuario: criado no firebase');
 						usuario.save()
@@ -120,7 +122,7 @@ var Usuarios = {
 			Usuarios[dados.key].uid = dados.key;
 			if (typeof Usuarios.callbackChanged == "function") Usuarios.callbackChanged(Usuarios[dados.key]);
 		});
-		firebase.database().ref('usuarios').on('child_removed', function (dados) {
+		firebase.database().ref('usuarios').on('child_removed', function(dados) {
 			delete Usuarios[dados.key];
 			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados.key);
 		});
