@@ -44,6 +44,12 @@ var app = {
                 $('#conteudo').removeClass('hide');
                 //var user = firebase.auth().currentUser;
                 $('#usrLogado').html("Conectado como <b>" + user.email + "</b>");
+                
+                Usuarios.findOne(user.uid).then(function(usuario){
+                    console.log(usuario.nome);
+                }).catch(function(err){
+                    console.log(err);
+                });
             }
             else {
                 console.log("Não está logado");

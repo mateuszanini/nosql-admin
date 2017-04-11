@@ -1,4 +1,4 @@
-Usuarios.callbackAdded = function (usuario) {
+/*Usuarios.callbackAdded = function (usuario) {
     newRow = '<tr id=\"' + usuario.uid + '\" class=\"text-center\">';
     var newRow = $(newRow);
     var cols = "";
@@ -6,4 +6,4 @@ Usuarios.callbackAdded = function (usuario) {
     cols += '<td>' + usuario.tipo + '</td>';
     newRow.append(cols);
     $('#tb-usuarios tr:last').after(newRow);
-}
+}*/
