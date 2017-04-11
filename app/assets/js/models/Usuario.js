@@ -19,8 +19,6 @@ class Usuario {
 		// e o objeto está sendo criado pelos observadores do nó usuarios
 		if (this.uid) return;
 		let usuario = this;
-		let usuarioAtual = firebase.auth().currentUser;
-		let credential = firebase.auth().credential;
 
 		return new Promise(
 			function (resolve, reject) {

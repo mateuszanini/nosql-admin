@@ -118,13 +118,33 @@
             </div>
             <div class="nav-content">
                 <ul class="tabs tabs-transparent">
-                    <li class="tab"><a href="#test1">Usuários</a></li>
-                    <li class="tab"><a class="active" href="#test2">Empresas</a></li>
+                    <li class="tab"><a class="active" href="#tabelaUsuarios">Usuários</a></li>
+                    <li class="tab"><a href="#test2">Empresas</a></li>
                 </ul>
             </div>
         </nav>
-        <div id="test1" class="col s12">Test 1</div>
-        <div id="test2" class="col s12">
+        <div id="tabelaUsuarios" class="col s12">
+            <div>
+                <!--aqui vem a tabela de usuários-->
+                <div>
+                    <table class="table table-hover table-condensed" id="tb-usuarios">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    Nome
+                                </th>
+                                <th class="text-center">
+                                    Tipo
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="test2" class="col s12">Test 2</div>
         <!-- Action Button de Cadastro -->
         <div class="fixed-action-btn horizontal click-to-toggle">
             <a class="btn-floating btn-large green">
@@ -134,12 +154,13 @@
                 <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Novo usuário"><i class="material-icons">person</i></a></li>
                 <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Nova empresa"><i class="material-icons">work</i></a></li>
             </ul>
-        </div></div>
-        
-        <div class="col s12 m12 l12 center-align">
-            <h4 id="usrLogado"></h4>
         </div>
-        <div class="col s12 m12 l12 center-align"><a class="waves-effect waves-light btn" onclick="app.logout()">Logout</a></div>
+    </div>
+
+    <div class="col s12 m12 l12 center-align">
+        <h4 id="usrLogado"></h4>
+    </div>
+    <div class="col s12 m12 l12 center-align"><a class="waves-effect waves-light btn" onclick="app.logout()">Logout</a></div>
     </div>
 
     <!-- MODAIS -->
@@ -170,16 +191,23 @@
         crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+    <!-- data tables -->
+    <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>
 
     <script src="assets/js/script.js"></script>
     <script type="text/javascript" src="assets/js/models/util.js"></script>
     <script type="text/javascript" src="assets/js/models/Empresa.js"></script>
     <script type="text/javascript" src="assets/js/models/Usuario.js"></script>
+    <script type="text/javascript" src="assets/js/UsuariosController.js"></script>
+
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             app.initialize();
             Empresas.init();
             Usuarios.init();
+
+            $('#tb-usuarios').DataTable();
         });
     </script>
 
