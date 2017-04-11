@@ -103,27 +103,30 @@
     <div class="row hide" id="conteudo">
         <nav class="nav-extended blue lighten-1">
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo">Logo</a>
+                <a href="#" class="brand-logo">&nbspNoSQL Admin</a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">JavaScript</a></li>
+                    <li>
+                        <a href="#!" class="usrLogadoMenu tooltipped" data-position="left" data-tooltip="Editar meu perfil"><i class="material-icons left">person</i></a>
+                    </li>
+                    <li><a href="#!" id="usrLogoutMenu" onclick="app.logout()"><i class="material-icons left">power_settings_new</i>Sair</a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">JavaScript</a></li>
+                    <li>
+                        <a href="#!" class="usrLogadoMenu"><i class="material-icons left">person</i></a>
+                    </li>
+                    <li><a href="#!" id="usrLogoutMenu" onclick="app.logout()"><i class="material-icons left">power_settings_new</i>Sair</a></li>
                 </ul>
             </div>
             <div class="nav-content">
                 <ul class="tabs tabs-transparent">
-                    <li class="tab"><a class="active" href="#tabelaUsuarios">Usuários</a></li>
-                    <li class="tab"><a href="#test2">Empresas</a></li>
+                    <li class="tab col s6 m6 l6"><a class="active" href="#tabUsuarios"><i class="material-icons left">person</i>Usuários</a></li>
+                    <li class="tab col s6 m6 l6"><a href="#tabEmpresas"><i class="material-icons left">work</i>Empresas</a></li>
                 </ul>
             </div>
         </nav>
-        <div id="tabelaUsuarios" class="col row s12">
+
+        <div id="tabUsuarios" class="col s12 m12 l12">
             <!--aqui vem a tabela de usuários-->
             <table id="tb-usuarios" class="highlight">
                 <thead>
@@ -136,24 +139,20 @@
                 <tbody>
                 </tbody>
             </table>
+            <div class="fixed-action-btn">
+                <a id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Novo usuário">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
-        <div id="test2" class="col s12">Test 2</div>
-        <!-- Action Button de Cadastro -->
-        <div class="fixed-action-btn horizontal click-to-toggle">
-            <a class="btn-floating btn-large green">
-                <i class="material-icons">add</i>
-            </a>
-            <ul>
-                <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Novo usuário"><i class="material-icons">person</i></a></li>
-                <li><a class="btn-floating tooltipped light-blue lighten-1" data-tooltip="Nova empresa"><i class="material-icons">work</i></a></li>
-            </ul>
+        
+        <div id="tabEmpresas" class="col s12">
+            <div class="fixed-action-btn">
+                <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
-    </div>
-
-    <div class="col s12 m12 l12 center-align">
-        <h4 id="usrLogado"></h4>
-    </div>
-    <div class="col s12 m12 l12 center-align"><a class="waves-effect waves-light btn" onclick="app.logout()">Logout</a></div>
     </div>
 
     <!-- MODAIS -->
@@ -195,7 +194,7 @@
     <script type="text/javascript" src="assets/js/UsuarioController.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             app.initialize();
             Empresas.init();
             Usuarios.init();

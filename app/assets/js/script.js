@@ -1,7 +1,7 @@
 var app = {
     initialize: function() {
-        $('#preloaderCarregando').toggleClass('hide');
-        $('#painelLogin').toggleClass('hide');
+        /*$('#preloaderCarregando').toggleClass('hide');
+        $('#painelLogin').toggleClass('hide');*/
 
         $('.button-collapse').sideNav({
             menuWidth: 300, // Default is 300
@@ -21,8 +21,8 @@ var app = {
         
         $(document).ready(function() {
             $('.tooltipped').tooltip({
-                delay: 50,
-                position: 'top'
+                delay: 50
+                //position: 'top'
             });
         });
 
@@ -40,15 +40,22 @@ var app = {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 console.log("Está logado");
+                $('#preloaderCarregando').addClass('hide');
                 $('#bg').addClass('hide');
                 $('#conteudo').removeClass('hide');
-                //var user = firebase.auth().currentUser;
-                $('#usrLogado').html("Conectado como <b>" + user.email + "</b>");
+                
+                Usuarios.findOne(user.uid).then(function(usuario){
+                    $('.usrLogadoMenu').html('<i class="material-icons left">person</i>' + usuario.nome);
+                }).catch(function(err){
+                    console.log(err);
+                });
             }
             else {
                 console.log("Não está logado");
+                $('#preloaderCarregando').addClass('hide');
                 $('#bg').removeClass('hide');
                 $('#conteudo').addClass('hide');
+                $('#painelLogin').removeClass('hide');
             }
         });
     },
