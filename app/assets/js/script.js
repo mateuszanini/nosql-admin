@@ -27,7 +27,7 @@ var app = {
             delay: 50
                 //position: 'top'
         });
-        
+
         $('select').material_select();
 
         // Initialize Firebase
@@ -39,6 +39,7 @@ var app = {
             storageBucket: "optativa-4f19a.appspot.com",
             messagingSenderId: "675752807270"
         };
+
         firebase.initializeApp(app.config);
 
         firebase.auth().onAuthStateChanged(function(user) {
@@ -62,11 +63,35 @@ var app = {
                 $('#painelLogin').removeClass('hide');
             }
         });
+
+        //EVENT LISTENERS
+        //login
+        $(".inputLogin").keypress(function() {
+            if (event.keyCode == 13) {
+                app.login()
+            }
+        });
+        $("#btnLogin").click(function() {
+            app.login()
+        });
+        //logout
+        $("#usrLogoutMenu").click(function() {
+           app.logout(); 
+        });
+        //redefinir senha
+        $("#btnRedefinirSenha").click(function() {
+            app.redefinirSenha();
+        });
+        //cadastrar usuário
+        $("#btnNovoUsuario").click(function(){
+            UsuarioController.mostraModalNovo();
+        });
     },
+
     login: function() {
         $('#mensagem').html("");
-        var email = $('#email').val();
-        var password = $('#senha').val();
+        var email = $('#emailLogin').val();
+        var password = $('#senhaLogin').val();
 
         firebase.auth().signInWithEmailAndPassword(email, password).then(
             //sucesso
@@ -97,10 +122,6 @@ var app = {
         }, function(error) {
             console.log("Erro ao desconectar");
         });
-    },
-
-    verificaLogado: function() {
-
     },
 
     redefinirSenha: function() {

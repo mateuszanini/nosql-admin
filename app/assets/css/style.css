@@ -3,7 +3,7 @@
     height: 100vh;
 }
 
-#painelLogin{
+#painelinputLogin{
     padding-top: 50px;
 }
 
@@ -15,34 +15,34 @@
 
 
 /* label focus color */
-.input-field input.login:focus+label {
+.input-field input.inputLogin:focus+label {
     color: #42a5f5;
 }
 
 /* label underline focus color */
-.input-field input.login:focus {
+.input-field input.inputLogin:focus {
     border-bottom: 1px solid #42a5f5;
     box-shadow: 0 1px 0 0 #42a5f5;
 }
 
 /* valid color */
-.input-field input.login.valid {
+.input-field input.inputLogin.valid {
     border-bottom: 1px solid #42a5f5;
     box-shadow: 0 1px 0 0 #42a5f5;
 }
 
 /* invalid color */
-.input-field input.login.invalid {
+.input-field input.inputLogin.invalid {
     border-bottom: 1px solid #f44336;
     box-shadow: 0 1px 0 0 #f44336;
 }
 
 /* icon prefix focus color */
-.input-field .prefix.login {
+.input-field .prefix.inputLogin {
     color: #9e9e9e;
 }
 
-.input-field .prefix.login.active {
+.input-field .prefix.inputLogin.active {
     color: #42a5f5;
 }
 

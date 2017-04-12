@@ -58,19 +58,19 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <form class="col s12 m12 l12">
+                                <form class="col s12 m12 l12" id="formLogin">
                                     <div class="row">
                                         <div class="input-field col s12 m12 l12">
                                             <!--<i class="material-icons prefix login">email</i>-->
-                                            <input id="email" type="email" name="email" class="validate login">
-                                            <label for="email" data-error="Email inválido" data-success="">Email</label>
+                                            <input id="emailLogin" type="email" name="emailLogin" class="validate inputLogin">
+                                            <label for="emailLogin" data-error="Email inválido" data-success="">Email</label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12 m12 l12">
                                             <!--<i class="material-icons prefix login">vpn_key</i>-->
-                                            <input id="senha" type="password" class="validate login">
-                                            <label for="senha">Senha</label>
+                                            <input id="senhaLogin" type="password" name="senhaLogin" class="validate inputLogin">
+                                            <label for="senhaLogin">Senha</label>
                                         </div>
                                     </div>
 
@@ -81,8 +81,7 @@
                                         </div>
                                     </div>
 
-                                    <a class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1" onclick="app.login()">Login</a>
-                                    <!--<button class="btn waves-effect waves-light col s12 m12 l12 blue lighten-1" type="submit" name="action">Login</button>-->
+                                    <a id="btnLogin" class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1">Login</a>
                                 </form>
                             </div>
                             <div class="row">
@@ -109,13 +108,13 @@
                     <li>
                         <a href="#!" class="usrLogadoMenu tooltipped" data-position="left" data-tooltip="Editar meu perfil"><i class="material-icons left">person</i></a>
                     </li>
-                    <li><a href="#!" id="usrLogoutMenu" onclick="app.logout()"><i class="material-icons left">power_settings_new</i>Sair</a></li>
+                    <li><a href="#!" id="usrLogoutMenu"><i class="material-icons left">power_settings_new</i>Sair</a></li>
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     <li>
                         <a href="#!" class="usrLogadoMenu"><i class="material-icons left">person</i></a>
                     </li>
-                    <li><a href="#!" id="usrLogoutMenu" onclick="app.logout()"><i class="material-icons left">power_settings_new</i>Sair</a></li>
+                    <li><a href="#!" id="usrLogoutMenu"><i class="material-icons left">power_settings_new</i>Sair</a></li>
                 </ul>
             </div>
             <div class="nav-content">
@@ -132,7 +131,6 @@
                 <div class="col s12 m4 l3">
                     <div class="card z-depth-3">
                         <div class="card-content">
-
                             <ul id='dropdown1' class='dropdown-content'>
                                 <li><a href="#!">Editar</a></li>
                                 <li><a href="#!">Alterar email</a></li>
@@ -140,155 +138,146 @@
                                 <li><a href="#!">Inativar</a></li>
                                 <li><a href="#!">Excluir</a></li>
                             </ul>
-
                             <a class="btn-floating waves-effect waves-light right red dropdown-button" data-activates="dropdown1"><i class="material-icons">more_vert</i></a>
                             <h6>Mateus Zanini</h6>
                             <p class="grey-text">mateus.zanini.gl@gmail.com</p>
                             <p class="grey-text">Administrador
-                                <!--<div class="switch">
-                                    <label>
-                                      Inativo
-                                      <input type="checkbox" checked>
-                                      <span class="lever"></span>
-                                      Ativo
-                                    </label>-->
                         </div>
                         </p>
                     </div>
                 </div>
             </div>
+
+
+
+            <!--aqui vem a tabela de usuários-->
+            <table id="tb-usuarios" class="highlight">
+                <thead>
+                    <tr>
+                        <th class="text-center"> Nome </th>
+                        <th class="text-center"> Email </th>
+                        <th class="text-center"> Tipo </th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <div class="fixed-action-btn">
+                <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
 
-
-        <!--aqui vem a tabela de usuários-->
-        <table id="tb-usuarios" class="highlight">
-            <thead>
-                <tr>
-                    <th class="text-center"> Nome </th>
-                    <th class="text-center"> Email </th>
-                    <th class="text-center"> Tipo </th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-
-        <div class="fixed-action-btn">
-            <a href="#modalUsuario" id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário" onclick="UsuarioController.mostraModalNovo()">
-                <i class="material-icons">add</i>
-            </a>
+        <div id="tabEmpresas" class="col s12 m12 l12">
+            <div class="fixed-action-btn">
+                <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div id="tabEmpresas" class="col s12">
-        <div class="fixed-action-btn">
-            <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
-                <i class="material-icons">add</i>
-            </a>
-        </div>
-    </div>
-    </div>
-
-    <!-- MODAIS -->
-    <!-- Modal de Recuperação de Senha -->
-    <div id="modalRecuperarSenha" class="modal">
-        <div class="modal-content">
-            <form class="col s12 m12 l12">
-                <div class="row">
-                    <div class="input-field col s12 m10 l8 offset-m1 offset-l2">
-                        <input id="emailRecuperarSenha" type="email" name="email" class="validate login" autofocus>
-                        <label for="email" data-error="Email inválido" data-success="">Email</label>
-                    </div>
-                    <div class="col s12 m10 l8 offset-m1 offset-l2">
-                        <a class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1" onclick="app.redefinirSenha()">Redefinir Senha</a>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-blue btn-flat">Cancelar</a>
-        </div>
-    </div>
-
-    <!-- Modal Usuário -->
-    <div id="modalUsuario" class="modal modal-fixed-footer">
-        <form class="col s12" id="formUsuario">
+        <!-- MODAIS -->
+        <!-- Modal de Recuperação de Senha -->
+        <div id="modalRecuperarSenha" class="modal">
             <div class="modal-content">
-                <h4 id="tituloModalUsuario"></h4>
-                <div class="row">
+                <form class="col s12 m12 l12">
                     <div class="row">
-                        <div class="input-field col s12 m6 l6">
-                            <input id="nomeUsuario" name="nomeUsuario" type="text" class="validate">
-                            <label for="nomeUsuario">Nome</label>
+                        <div class="input-field col s12 m10 l8 offset-m1 offset-l2">
+                            <input id="emailRecuperarSenha" type="email" name="email" class="validate login" autofocus>
+                            <label for="email" data-error="Email inválido" data-success="">Email</label>
                         </div>
-                        <div class="input-field col s12 m6 l6">
-                            <input id="emailUsuario" name="emailUsuario" type="email" class="validate">
-                            <label for="emailUsuario" data-error="Email inválido" data-success="">Email</label>
+                        <div class="col s12 m10 l8 offset-m1 offset-l2">
+                            <a class="waves-effect waves-light btn col s12 m12 l12 blue lighten-1" id="btnRedefinirSenha">Redefinir Senha</a>
                         </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-blue btn-flat">Cancelar</a>
+            </div>
+        </div>
 
-                        <div class="input-field col s12 m12 l12">
-                            <select name="empresaUsuario" id="empresaUsuario" multiple>
+        <!-- Modal Usuário -->
+        <div id="modalUsuario" class="modal modal-fixed-footer">
+            <form class="col s12" id="formUsuario">
+                <div class="modal-content">
+                    <h4 id="tituloModalUsuario"></h4>
+                    <div class="row">
+                        <div class="row">
+                            <div class="input-field col s12 m6 l6">
+                                <input id="nomeUsuario" name="nomeUsuario" type="text" class="validate">
+                                <label for="nomeUsuario">Nome</label>
+                            </div>
+                            <div class="input-field col s12 m6 l6">
+                                <input id="emailUsuario" name="emailUsuario" type="email" class="validate">
+                                <label for="emailUsuario" data-error="Email inválido" data-success="">Email</label>
+                            </div>
+
+                            <div class="input-field col s12 m12 l12">
+                                <select name="empresaUsuario" id="empresaUsuario" multiple>
 
                             </select>
-                            <label>Empresa</label>
-                        </div>
+                                <label>Empresa</label>
+                            </div>
 
-                        <div class="input-field col s12 m6 l6">
-                            <select name="tipoUsuario" id="tipoUsuario">
+                            <div class="input-field col s12 m6 l6">
+                                <select name="tipoUsuario" id="tipoUsuario">
                               <option value="admin">Administrador</option>
                               <option value="gerente">Gerente</option>
                               <option value="operador" selected>Operador</option>
                             </select>
-                            <label for="tipoUsuario">Tipo</label>
-                        </div>
+                                <label for="tipoUsuario">Tipo</label>
+                            </div>
 
-                        <div class="input-field col s12 m6 l6">
-                            <div class="switch">
-                                <label>
+                            <div class="input-field col s12 m6 l6">
+                                <div class="switch">
+                                    <label>
                                   Inativo
                                   <input type="checkbox" name="ativoUsuario" id="ativoUsuario" checked>
                                   <span class="lever"></span>
                                   Ativo
                                 </label>
+                                </div>
                             </div>
+
+
                         </div>
 
-
                     </div>
-
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn waves-effect waves-light blue lighten-1" type="submit" name="action" id="btnSalvaUsuario"></button>
-                <a href="#!" class="modal-action modal-close waves-effect btn-flat ">Cancelar</a>
-            </div>
-        </form>
-    </div>
+                <div class="modal-footer">
+                    <button class="btn waves-effect waves-light blue lighten-1" type="submit" name="action" id="btnSalvaUsuario"></button>
+                    <a href="#!" class="modal-action modal-close waves-effect btn-flat ">Cancelar</a>
+                </div>
+            </form>
+        </div>
 
 
-    <!-- FIREBASE -->
-    <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
-    <!-- data tables -->
-    <!--<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+        <!-- FIREBASE -->
+        <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
+        <!-- JQuery -->
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
+        <!-- data tables -->
+        <!--<script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
      <script src="https://cdn.datatables.net/1.10.10/js/dataTables.bootstrap.min.js"></script>-->
 
-    <script src="assets/js/script.js"></script>
-    <script type="text/javascript" src="assets/js/models/util.js"></script>
-    <script type="text/javascript" src="assets/js/models/Empresa.js"></script>
-    <script type="text/javascript" src="assets/js/models/Usuario.js"></script>
-    <script type="text/javascript" src="assets/js/UsuarioController.js"></script>
+        <script src="assets/js/script.js"></script>
+        <script type="text/javascript" src="assets/js/models/util.js"></script>
+        <script type="text/javascript" src="assets/js/models/Empresa.js"></script>
+        <script type="text/javascript" src="assets/js/models/Usuario.js"></script>
+        <script type="text/javascript" src="assets/js/UsuarioController.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            app.initialize();
-            Empresas.init();
-            Usuarios.init();
-        });
-    </script>
+        <script>
+            $(document).ready(function() {
+                app.initialize();
+                Empresas.init();
+                Usuarios.init();
+            });
+        </script>
 
 </body>
 
