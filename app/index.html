@@ -127,33 +127,66 @@
         </nav>
 
         <div id="tabUsuarios" class="col s12 m12 l12">
-            <!--aqui vem a tabela de usuários-->
-            <table id="tb-usuarios" class="highlight">
-                <thead>
-                    <tr>
-                        <th class="text-center"> Nome </th>
-                        <th class="text-center"> Email </th>
-                        <th class="text-center"> Tipo </th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
 
-            <div class="fixed-action-btn">
-                <a href="#modalUsuario" id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário" onclick="UsuarioController.mostraModalNovo()">
-                    <i class="material-icons">add</i>
-                </a>
+            <div class="row">
+                <div class="col s12 m4 l3">
+                    <div class="card z-depth-3">
+                        <div class="card-content">
+
+                            <ul id='dropdown1' class='dropdown-content'>
+                                <li><a href="#!">Editar</a></li>
+                                <li><a href="#!">Alterar email</a></li>
+                                <li><a href="#!">Redefinir senha</a></li>
+                                <li><a href="#!">Inativar</a></li>
+                                <li><a href="#!">Excluir</a></li>
+                            </ul>
+
+                            <a class="btn-floating waves-effect waves-light right red dropdown-button" data-activates="dropdown1"><i class="material-icons">more_vert</i></a>
+                            <h6>Mateus Zanini</h6>
+                            <p class="grey-text">mateus.zanini.gl@gmail.com</p>
+                            <p class="grey-text">Administrador
+                                <!--<div class="switch">
+                                    <label>
+                                      Inativo
+                                      <input type="checkbox" checked>
+                                      <span class="lever"></span>
+                                      Ativo
+                                    </label>-->
+                        </div>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="tabEmpresas" class="col s12">
-            <div class="fixed-action-btn">
-                <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
-                    <i class="material-icons">add</i>
-                </a>
-            </div>
+
+        <!--aqui vem a tabela de usuários-->
+        <table id="tb-usuarios" class="highlight">
+            <thead>
+                <tr>
+                    <th class="text-center"> Nome </th>
+                    <th class="text-center"> Email </th>
+                    <th class="text-center"> Tipo </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <div class="fixed-action-btn">
+            <a href="#modalUsuario" id="btnAddUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário" onclick="UsuarioController.mostraModalNovo()">
+                <i class="material-icons">add</i>
+            </a>
         </div>
+    </div>
+
+    <div id="tabEmpresas" class="col s12">
+        <div class="fixed-action-btn">
+            <a id="btnAddEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
+                <i class="material-icons">add</i>
+            </a>
+        </div>
+    </div>
     </div>
 
     <!-- MODAIS -->

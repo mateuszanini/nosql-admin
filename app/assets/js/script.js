@@ -16,7 +16,11 @@ var app = {
         });
 
         $(".dropdown-button").dropdown({
-            hover: true
+            hover: true,
+            constrainWidth: false,
+            gutter: 0,
+            belowOrigin: false,
+            alignment: 'right'
         });
 
         $('.tooltipped').tooltip({
