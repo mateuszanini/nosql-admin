@@ -131,7 +131,7 @@
             </div>
             <!--row -->
         </div>
-        
+
         <div class="fixed-action-btn">
             <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger"
                 data-position="left" data-tooltip="Novo usuário">
@@ -202,6 +202,7 @@
                             <label for="tipoUsuario">Tipo</label>
                         </div>
 
+                        <!--
                         <div class="input-field col s12 m6 l6">
                             <div class="switch">
                                 <label>
@@ -212,7 +213,7 @@
                                 </label>
                             </div>
                         </div>
-
+-->
 
                     </div>
 
@@ -246,9 +247,14 @@
     <script>
         $(document).ready(function () {
             app.initialize();
-            Empresas.init();
-            Usuarios.init();
+            //Empresas.init();
+            //Usuarios.init();
         });
+        //adiciona no objeto Array um metodo para verificar a diferença entre dois arrays
+        //exemplo: ['a','b','c'].diff(['a','b','q']) resulta em: ['c']
+        Array.prototype.diff = function (a) {
+            return this.filter(function (i) { return a.indexOf(i) < 0; });
+        };
     </script>
 
 </body>

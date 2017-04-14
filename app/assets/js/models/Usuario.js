@@ -30,12 +30,17 @@ class Usuario {
 						secondaryApp = null;
 						usuario.uid = user.uid;
 						console.log('Usuario: criado no firebase');
+						//salva usuario no nó de controle da aplicação
 						usuario.save()
 							.then(function() {
 								console.log('Usuario: nó inserido database do firebase');
 								firebase.auth().sendPasswordResetEmail(usuario.email)
 									.then(function() {
-										console.log('Usuario: Email para redefinicao de senha enviado');
+										console.log('Usuario: Email para redefinicao de senha enviado');										
+										//salva o uid do usuario na lista de usuarios de cada empresa
+										for(var i =0; i < usuario.empresas.length;i++){
+											Empresas[usuario.empresas[i]].addUsuario(usuario.uid);
+										}
 										resolve();
 									}).catch(function(err) {
 										reject(err);
@@ -110,6 +115,7 @@ var Usuarios = {
 	callbackChanged: null,
 	callbackRemoved: null,
 	init: function() {
+		 
 		//Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
 		firebase.database().ref('usuarios').on('child_added', function(dados) {
 			Usuarios[dados.key] = new Usuario(dados.val());
