@@ -87,6 +87,17 @@ var UsuarioController = {
         $('#modalUsuario').modal('open');
     },
 
+    alteraEstado(uid) {
+        Usuarios[uid].ativo = !Usuarios[uid].ativo;
+        Usuarios[uid].save()
+            .then(function () {
+                console.log('Alterado com sucesso');
+            })
+            .catch(function (err) {
+                alert(err);
+            });
+    },
+
     novo: function (event) {
         // Get all the forms elements and their values in one step
 
@@ -119,6 +130,7 @@ var UsuarioController = {
         new Usuario(usu)
             .then(function () {
                 alert("Usuário criado e nova senha solicitada");
+                $('#modalUsuario').modal('close');
             })
             .catch(function (err) {
                 alert(err);
@@ -163,10 +175,13 @@ Usuarios.callbackAdded = function (usuario) {
         "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
         "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Inativar</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
+        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
+    if (usuario.ativo) newCard += "Inativar";
+    else newCard += "Ativar";
+    newCard += "</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
         "</ul>" +
         "<h6>" + usuario.nome + "</h6>" +
         "<p class=\"grey-text\">" + usuario.email + "</p>" +
@@ -188,16 +203,20 @@ Usuarios.callbackAdded = function (usuario) {
 }
 
 Usuarios.callbackChanged = function (usuario) {
+    console.log(usuario.nome + " alterado!");
     var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
         "<div class=\"card z-depth-3\">" +
         "<div class=\"card-content\">" +
         "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
         "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Inativar</a></li>" +
-        "<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
+        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
+    if (usuario.ativo) newCard += "Inativar";
+    else newCard += "Ativar";
+    newCard += "</a></li>" +
+        //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
         "</ul>" +
         "<h6>" + usuario.nome + "</h6>" +
         "<p class=\"grey-text\">" + usuario.email + "</p>" +

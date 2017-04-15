@@ -47,13 +47,17 @@ var app = {
                 console.log("Está logado");
                 Empresas.init();
                 Usuarios.init();
-                $('#preloaderCarregando').addClass('hide');
-                $('#bg').addClass('hide');
-                $('#conteudo').removeClass('hide');
-
                 Usuarios.findOne(user.uid).then(function (usuario) {
+                    $('#preloaderCarregando').addClass('hide');
+                    $('#bg').addClass('hide');
+                    $('#conteudo').removeClass('hide');
                     $('.usrLogadoMenu').html('<i class="material-icons left">person</i>' + usuario.nome);
                 }).catch(function (err) {
+                    var errorCode = err.code;
+                    if(errorCode == 'PERMISSION_DENIED'){
+                        alert("Usuário desabilitado!");
+                        app.logout();
+                    }
                     console.log(err);
                 });
             }

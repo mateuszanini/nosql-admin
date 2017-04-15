@@ -7,7 +7,9 @@ class Usuario {
 		else this.tipo = "operador";
 		if (_dados.telefones) this.telefones = _dados.telefones;
 		//campos de controle
-		if (_dados.ativo) this.ativo = _dados.ativo;
+		if (_dados.ativo != undefined) {
+			this.ativo = _dados.ativo;
+		}
 		else this.ativo = true;
 		if (_dados.createdAt) this.createdAt = _dados.createdAt;
 		else this.createdAt = new Date().getTime();
@@ -22,34 +24,33 @@ class Usuario {
 		let usuario = this;
 
 		return new Promise(
-			function(resolve, reject) {
-				let secondaryApp = firebase.initializeApp(app.config,'secondaryApp');
+			function (resolve, reject) {
+				let secondaryApp = firebase.initializeApp(app.config, 'secondaryApp');
 				secondaryApp.auth().createUserWithEmailAndPassword(usuario.email, guid())
-					.then(function(user) {
+					.then(function (user) {
 						secondaryApp.auth().signOut();
-						secondaryApp = null;
 						usuario.uid = user.uid;
 						console.log('Usuario: criado no firebase');
 						//salva usuario no nó de controle da aplicação
 						usuario.save()
-							.then(function() {
+							.then(function () {
 								console.log('Usuario: nó inserido database do firebase');
 								firebase.auth().sendPasswordResetEmail(usuario.email)
-									.then(function() {
-										console.log('Usuario: Email para redefinicao de senha enviado');										
+									.then(function () {
+										console.log('Usuario: Email para redefinicao de senha enviado');
 										//salva o uid do usuario na lista de usuarios de cada empresa
-										for(var i =0; i < usuario.empresas.length;i++){
+										for (var i = 0; i < usuario.empresas.length; i++) {
 											Empresas[usuario.empresas[i]].addUsuario(usuario.uid);
 										}
 										resolve();
-									}).catch(function(err) {
+									}).catch(function (err) {
 										reject(err);
 									});
-							}).catch(function(err) {
+							}).catch(function (err) {
 								reject(err);
 							});
 					})
-					.catch(function(error) {
+					.catch(function (error) {
 						// Handle Errors here.
 						var errorCode = error.code;
 						var errorMessage = error.message;
@@ -72,7 +73,7 @@ class Usuario {
 		if (usuario.uid) usuario.updatedAt = new Date().getTime();
 		try {
 			return firebase.database().ref().child('usuarios').child(usuario.uid).set(usuario,
-				function(err) {
+				function (err) {
 					if (err == null) {
 
 					}
@@ -83,7 +84,7 @@ class Usuario {
 		}
 		catch (err) {
 			return new Promise(
-				function(resolve, reject) {
+				function (resolve, reject) {
 					reject(err)
 				}
 			);
@@ -114,36 +115,36 @@ var Usuarios = {
 	callbackAdded: null,
 	callbackChanged: null,
 	callbackRemoved: null,
-	init: function() {
-		 
+	init: function () {
+
 		//Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
-		firebase.database().ref('usuarios').on('child_added', function(dados) {
+		firebase.database().ref('usuarios').on('child_added', function (dados) {
 			Usuarios[dados.key] = new Usuario(dados.val());
 			Usuarios[dados.key].uid = dados.key;
 			if (typeof Usuarios.callbackAdded == "function") Usuarios.callbackAdded(Usuarios[dados.key]);
 		});
 
-		firebase.database().ref('usuarios').on('child_changed', function(dados) {
+		firebase.database().ref('usuarios').on('child_changed', function (dados) {
 			Usuarios[dados.key] = new Usuario(dados.val());
 			Usuarios[dados.key].uid = dados.key;
 			if (typeof Usuarios.callbackChanged == "function") Usuarios.callbackChanged(Usuarios[dados.key]);
 		});
-		firebase.database().ref('usuarios').on('child_removed', function(dados) {
+		firebase.database().ref('usuarios').on('child_removed', function (dados) {
 			delete Usuarios[dados.key];
 			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados.key);
 		});
 	},
 	findOne(uid) {
 		return new Promise(
-			function(resolve, reject) {
-				firebase.database().ref('/usuarios/' + uid).once('value').then(function(_dados) {
+			function (resolve, reject) {
+				firebase.database().ref('/usuarios/' + uid).once('value').then(function (_dados) {
 					if (!_dados.val()) {
 						reject("Nenhum usuário encontrado!");
 					}
 					else {
 						resolve(new Usuario(_dados.val()));
 					}
-				}).catch(function(err) {
+				}).catch(function (err) {
 					reject(err);
 				});
 			});
