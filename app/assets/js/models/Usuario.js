@@ -16,7 +16,7 @@ class Usuario {
 
 		//relacionamento com empresas
 		if (_dados.empresas) this.empresas = _dados.empresas;
-		else this.empresas = [];
+		else this.empresas = {};
 		if (_dados.uid) this.uid = _dados.uid;
 		//se já existe um uid, significa que o usuário já foi criado no firebase
 		// e o objeto está sendo criado pelos observadores do nó usuarios
@@ -39,8 +39,8 @@ class Usuario {
 									.then(function () {
 										console.log('Usuario: Email para redefinicao de senha enviado');
 										//salva o uid do usuario na lista de usuarios de cada empresa
-										for (var i = 0; i < usuario.empresas.length; i++) {
-											Empresas[usuario.empresas[i]].addUsuario(usuario.uid);
+										for (let emp in usuario.empresas) {
+											Empresas[emp].addUsuario(usuario.uid);
 										}
 										resolve();
 									}).catch(function (err) {
@@ -91,9 +91,9 @@ class Usuario {
 		}
 	}
 	addEmpresa(uid) {
-		if (this.empresas.indexOf(uid) == -1) {
+		if (this.empresas[uid]==undefined) {
 			if (Empresas[uid]) {
-				this.empresas.push(uid);
+				this.empresas[uid] = true;
 				Empresas[uid].addUsuario(this.uid);
 				this.save();
 			}
@@ -103,8 +103,8 @@ class Usuario {
 		}
 	}
 	removeEmpresa(uid) {
-		if (this.empresas.indexOf(uid) > -1) {
-			this.empresas.splice(this.empresas.indexOf(uid), 1);
+		if (this.empresas[uid]) {
+			delete this.empresas[uid]
 			Empresas[uid].removeUsuario(this.uid);
 			this.save();
 		}

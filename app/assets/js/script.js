@@ -45,16 +45,16 @@ var app = {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 console.log("Está logado");
-                Empresas.init();
-                Usuarios.init();
                 Usuarios.findOne(user.uid).then(function (usuario) {
+                    Empresas.init(usuario);
+                    Usuarios.init();
                     $('#preloaderCarregando').addClass('hide');
                     $('#bg').addClass('hide');
                     $('#conteudo').removeClass('hide');
                     $('.usrLogadoMenu').html('<i class="material-icons left">person</i>' + usuario.nome);
                 }).catch(function (err) {
                     var errorCode = err.code;
-                    if(errorCode == 'PERMISSION_DENIED'){
+                    if (errorCode == 'PERMISSION_DENIED') {
                         alert("Usuário desabilitado!");
                         app.logout();
                     }

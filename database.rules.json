@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "empresas": {
+      //Administradores podem ler e escrever em todos os nós
+      ".read": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      //Usuários não administradores somente tem acesso às empresas que estão no seu nó empresas
+      "$uid": {
+        ".read": "root.child('usuarios/' + auth.uid + '/empresas/' + $uid).exists() && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+      }
+    },
+    "usuarios": {
+      //Administradores podem ler e escrever em todos os nós
+      ".read": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+    }
+  }
+}

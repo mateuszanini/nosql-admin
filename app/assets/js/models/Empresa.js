@@ -23,9 +23,9 @@ class Empresa {
 			}
 			else {
 				this.uid = firebase.database().ref().child('empresas').push().key;
-				let e = this;				
+				let e = this;
 				return new Promise(
-					function (resolve, reject) {												
+					function (resolve, reject) {
 						e.save().then(function () {
 							resolve();
 						}).catch(function (err) {
@@ -87,7 +87,7 @@ class Empresa {
 				this.usuarios.push(uid);
 				Usuarios[uid].addEmpresa(this.uid);
 				this.save();
-			}else{
+			} else {
 				console.error("Usuário não encontrado!");
 			}
 		}
@@ -106,23 +106,74 @@ var Empresas = {
 	callbackAdded: null,
 	callbackChanged: null,
 	callbackRemoved: null,
-	init: function () {
-		//Adiciona observadores ao nó no firebase para manter a lista de empresas atualizada
-		firebase.database().ref('empresas').on('child_added', function (dados) {
-			Empresas[dados.key] = new Empresa(dados.val());
-			Empresas[dados.key].uid = dados.key;
-			if (typeof Empresas.callbackAdded == "function") Empresas.callbackAdded(Empresas[dados.key]);
-		});
+	init: function (usuario) {
+		if (usuario.tipo == 'admin') {
+			//Adiciona observadores ao nó no firebase para manter a lista de empresas atualizada
+			firebase.database().ref('empresas').on('child_added', function (dados) {
+				Empresas[dados.key] = new Empresa(dados.val());
+				Empresas[dados.key].uid = dados.key;
+				if (typeof Empresas.callbackAdded == "function") Empresas.callbackAdded(Empresas[dados.key]);
+			});
 
-		firebase.database().ref('empresas').on('child_changed', function (dados) {
-			Empresas[dados.key] = new Empresa(dados.val());
-			Empresas[dados.key].uid = dados.key;
-			if (typeof Empresas.callbackChanged == "function") Empresas.callbackChanged(Empresas[dados.key]);
-		});
+			firebase.database().ref('empresas').on('child_changed', function (dados) {
+				Empresas[dados.key] = new Empresa(dados.val());
+				Empresas[dados.key].uid = dados.key;
+				if (typeof Empresas.callbackChanged == "function") Empresas.callbackChanged(Empresas[dados.key]);
+			});
 
-		firebase.database().ref('empresas').on('child_removed', function (dados) {
-			delete Empresas[dados.key];
-			if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
-		});
+			firebase.database().ref('empresas').on('child_removed', function (dados) {
+				delete Empresas[dados.key];
+				if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
+			});
+		} else {
+			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_added', function (dados) {
+				//console.log(dados.key);
+				if (dados.val() == false) {
+					delete Empresas[dados.key];
+					if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
+					return;
+				}
+				Empresas.findOne(dados.key).then(function (empresa) {
+					Empresas[empresa.uid] = empresa;
+					if (typeof Empresas.callbackAdded == "function") Empresas.callbackAdded(empresa);
+				}).catch(function (err) {
+					console.log(err);
+				});
+			});
+			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_changed', function (dados) {
+				//console.log(dados.key);
+				if (dados.val() == false) {
+					delete Empresas[dados.key];
+					if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
+					return;
+				}
+				Empresas.findOne(dados.key).then(function (empresa) {
+					Empresas[empresa.uid] = empresa;
+					if (typeof Empresas.callbackChanged == "function") Empresas.callbackAdded(empresa);
+				}).catch(function (err) {
+					console.log(err);
+				});
+			});
+			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_removed', function (dados) {
+				//console.log(dados.key);
+				delete Empresas[dados.key];
+				if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
+			});
+		}
+	},
+	findOne(uid) {
+		return new Promise(
+			function (resolve, reject) {
+				firebase.database().ref('/empresas/' + uid).once('value').then(function (_dados) {
+					if (!_dados.val()) {
+						reject("Nenhuma empresa encontrada!");
+					}
+					else {
+						resolve(new Empresa(_dados.val()));
+					}
+				}).catch(function (err) {
+					reject(err);
+				});
+			});
 	}
 };

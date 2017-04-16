@@ -24,7 +24,7 @@ var UsuarioController = {
         );
         $.map(Empresas, function (n, i) {
             if (typeof n == 'object' && n) {
-                if (usuario.empresas.indexOf(n.uid) >= 0) {
+                if (usuario.empresas[n.uid]) {
                     $("#empresaUsuario").append(
                         $('<option/>')
                             .attr('value', n.uid)
@@ -47,10 +47,10 @@ var UsuarioController = {
             //serializa o form
             var unindexed_array = $(this).serializeArray();
             var _dados = {};
-            _dados.empresas = [];
+            _dados.empresas = {};
             $.map(unindexed_array, function (n, i) {
                 if (n['name'] == 'empresaUsuario') {
-                    _dados.empresas.push(n['value']);
+                    _dados.empresas[n['value']] = true;
                 }
                 else {
                     _dados[n['name']] = n['value'];
@@ -59,18 +59,34 @@ var UsuarioController = {
 
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
             if (_dados.tipoUsuario != "") usuario.tipo = _dados.tipoUsuario;
+
+            console.log(_dados);
+
             // 		if (_dados.telefones) usu.telefones = _dados.telefones;
+
             //relacionamento com empresas
             //verifica as empresas que precisam ser adicionadas
-            let add = _dados.empresas.diff(usuario.empresas);
+            //transforma os objetos em arrays e verifica a diferença entre eles
+            let add = $.map(_dados.empresas, function (value, index) {
+                return [index];
+            }).diff($.map(usuario.empresas, function (value, index) {
+                return [index];
+            }));
             for (let i = 0; i < add.length; i++) {
                 usuario.addEmpresa(add[i]);
             }
+
             //verifica as empresas que precisam ser excluidas
-            let del = usuario.empresas.diff(_dados.empresas);
+            //transforma os objetos em arrays e verifica a diferença entre eles
+            let del = $.map(usuario.empresas, function (value, index) {
+                return [index];
+            }).diff($.map(_dados.empresas, function (value, index) {
+                return [index];
+            }));
             for (let i = 0; i < del.length; i++) {
                 usuario.removeEmpresa(del[i]);
             }
+            
             usuario.save()
                 .then(function () {
                     console.log('ok');
@@ -103,11 +119,11 @@ var UsuarioController = {
 
         var unindexed_array = $(this).serializeArray();
         var _dados = {};
-        _dados.empresas = [];
+        _dados.empresas = {};
 
         $.map(unindexed_array, function (n, i) {
             if (n['name'] == 'empresaUsuario') {
-                _dados.empresas.push(n['value']);
+                _dados.empresas[n['value']] = true;
             }
             else {
                 _dados[n['name']] = n['value'];
@@ -121,12 +137,9 @@ var UsuarioController = {
         // 		if (_dados.telefones) usu.telefones = _dados.telefones;
         //relacionamento com empresas
         if (_dados.empresas) usu.empresas = _dados.empresas;
-        else usu.empresas = [];
+        else usu.empresas = {};
 
         // if (_dados.uid) usu.uid = _dados.uid;
-
-        console.log(usu);
-
         new Usuario(usu)
             .then(function () {
                 alert("Usuário criado e nova senha solicitada");
