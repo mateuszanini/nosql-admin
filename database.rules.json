@@ -12,7 +12,11 @@
     "usuarios": {
       //Administradores podem ler e escrever em todos os nós
       ".read": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
-      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      //Usuários não administradores tem acesso somente ao seu nó
+    	"$uid": {
+        ".read": "auth.uid === $uid && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+      }
     }
   }
 }
