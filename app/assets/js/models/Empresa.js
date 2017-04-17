@@ -16,7 +16,7 @@ class Empresa {
 
 			//relacionamento com usuarios
 			if (_dados.usuarios) this.usuarios = _dados.usuarios;
-			else this.usuarios = [];
+			else this.usuarios = {};
 
 			if (_dados.uid) {
 				this.uid = _dados.uid;
@@ -82,9 +82,9 @@ class Empresa {
 		}
 	}
 	addUsuario(uid) {
-		if (this.usuarios.indexOf(uid) == -1) {
+		if (this.usuarios[uid] == undefined) {
 			if (Usuarios[uid]) {
-				this.usuarios.push(uid);
+				this.usuarios[uid] = true;
 				Usuarios[uid].addEmpresa(this.uid);
 				this.save();
 			} else {
@@ -93,8 +93,8 @@ class Empresa {
 		}
 	}
 	removeUsuario(uid) {
-		if (this.usuarios.indexOf(uid) > -1) {
-			this.usuarios.splice(this.usuarios.indexOf(uid), 1);
+		if (this.usuarios[uid]) {
+			delete this.usuarios[uid];
 			Usuarios[uid].removeEmpresa(this.uid);
 			this.save();
 		}
@@ -107,6 +107,9 @@ var Empresas = {
 	callbackChanged: null,
 	callbackRemoved: null,
 	init: function (usuario) {
+		if (usuario == undefined) {
+			throw "Usuário inválido!";
+		}
 		if (usuario.tipo == 'admin') {
 			//Adiciona observadores ao nó no firebase para manter a lista de empresas atualizada
 			firebase.database().ref('empresas').on('child_added', function (dados) {
@@ -126,6 +129,7 @@ var Empresas = {
 				if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
 			});
 		} else {
+			//Observer ao adicionar novos nós
 			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_added', function (dados) {
 				//console.log(dados.key);
 				if (dados.val() == false) {
@@ -133,6 +137,10 @@ var Empresas = {
 					if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
 					return;
 				}
+				//Quando uma nova empresa é asssociada a um usuário
+				//recebe o uid
+				//busca empresa no banco
+				//insere no objeto de empresas
 				Empresas.findOne(dados.key).then(function (empresa) {
 					Empresas[empresa.uid] = empresa;
 					if (typeof Empresas.callbackAdded == "function") Empresas.callbackAdded(empresa);
@@ -140,6 +148,7 @@ var Empresas = {
 					console.log(err);
 				});
 			});
+			//Observer ao editar nós
 			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_changed', function (dados) {
 				//console.log(dados.key);
 				if (dados.val() == false) {
@@ -147,6 +156,10 @@ var Empresas = {
 					if (typeof Empresas.callbackRemoved == "function") Empresas.callbackRemoved(dados.key);
 					return;
 				}
+				//Quando um nó é alterado
+				//recebe o uid
+				//busca empresa no banco
+				//altera no objeto de empresas
 				Empresas.findOne(dados.key).then(function (empresa) {
 					Empresas[empresa.uid] = empresa;
 					if (typeof Empresas.callbackChanged == "function") Empresas.callbackAdded(empresa);
@@ -154,6 +167,7 @@ var Empresas = {
 					console.log(err);
 				});
 			});
+			//observer ao excluir um nó
 			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_removed', function (dados) {
 				//console.log(dados.key);
 				delete Empresas[dados.key];
@@ -164,7 +178,7 @@ var Empresas = {
 	findOne(uid) {
 		return new Promise(
 			function (resolve, reject) {
-				firebase.database().ref('/empresas/' + uid).once('value').then(function (_dados) {
+				firebase.database().ref('empresas/' + uid).once('value').then(function (_dados) {
 					if (!_dados.val()) {
 						reject("Nenhuma empresa encontrada!");
 					}

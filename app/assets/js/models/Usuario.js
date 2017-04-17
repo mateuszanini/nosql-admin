@@ -38,6 +38,10 @@ class Usuario {
 								firebase.auth().sendPasswordResetEmail(usuario.email)
 									.then(function () {
 										console.log('Usuario: Email para redefinicao de senha enviado');
+										//insere usuario no objeto da aplicação
+										if (Usuarios[usuario.uid] == undefined) {
+											Usuarios[usuario.uid] = usuario;
+										}
 										//salva o uid do usuario na lista de usuarios de cada empresa
 										for (let emp in usuario.empresas) {
 											Empresas[emp].addUsuario(usuario.uid);
@@ -72,15 +76,7 @@ class Usuario {
 		let usuario = this;
 		if (usuario.uid) usuario.updatedAt = new Date().getTime();
 		try {
-			return firebase.database().ref().child('usuarios').child(usuario.uid).set(usuario,
-				function (err) {
-					if (err == null) {
-
-					}
-					else {
-
-					}
-				});
+			return firebase.database().ref().child('usuarios').child(usuario.uid).set(usuario);
 		}
 		catch (err) {
 			return new Promise(
@@ -91,7 +87,7 @@ class Usuario {
 		}
 	}
 	addEmpresa(uid) {
-		if (this.empresas[uid]==undefined) {
+		if (this.empresas[uid] == undefined) {
 			if (Empresas[uid]) {
 				this.empresas[uid] = true;
 				Empresas[uid].addUsuario(this.uid);
@@ -104,7 +100,7 @@ class Usuario {
 	}
 	removeEmpresa(uid) {
 		if (this.empresas[uid]) {
-			delete this.empresas[uid]
+			delete this.empresas[uid];
 			Empresas[uid].removeUsuario(this.uid);
 			this.save();
 		}
@@ -115,29 +111,57 @@ var Usuarios = {
 	callbackAdded: null,
 	callbackChanged: null,
 	callbackRemoved: null,
-	init: function () {
+	init: function (usuario) {
+		if (usuario == undefined) {
+			throw "Usuário inválido!";
+		}
+		if (usuario.tipo == 'admin') {
+			//Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
+			firebase.database().ref('usuarios').on('child_added', function (dados) {
+				Usuarios[dados.key] = new Usuario(dados.val());
+				Usuarios[dados.key].uid = dados.key;
+				if (typeof Usuarios.callbackAdded == "function") Usuarios.callbackAdded(Usuarios[dados.key]);
+			});
 
-		//Adiciona observadores ao nó no firebase para manter a lista de usuarios atualizada
-		firebase.database().ref('usuarios').on('child_added', function (dados) {
-			Usuarios[dados.key] = new Usuario(dados.val());
-			Usuarios[dados.key].uid = dados.key;
-			if (typeof Usuarios.callbackAdded == "function") Usuarios.callbackAdded(Usuarios[dados.key]);
-		});
-
-		firebase.database().ref('usuarios').on('child_changed', function (dados) {
-			Usuarios[dados.key] = new Usuario(dados.val());
-			Usuarios[dados.key].uid = dados.key;
-			if (typeof Usuarios.callbackChanged == "function") Usuarios.callbackChanged(Usuarios[dados.key]);
-		});
-		firebase.database().ref('usuarios').on('child_removed', function (dados) {
-			delete Usuarios[dados.key];
-			if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados.key);
-		});
+			firebase.database().ref('usuarios').on('child_changed', function (dados) {
+				Usuarios[dados.key] = new Usuario(dados.val());
+				Usuarios[dados.key].uid = dados.key;
+				if (typeof Usuarios.callbackChanged == "function") Usuarios.callbackChanged(Usuarios[dados.key]);
+			});
+			firebase.database().ref('usuarios').on('child_removed', function (dados) {
+				delete Usuarios[dados.key];
+				if (typeof Usuarios.callbackRemoved == "function") Usuarios.callbackRemoved(dados.key);
+			});
+		}
+		if (usuario.tipo == 'gerente') {
+			//O gerente tem acesso somente aos usuarios das empresas que ele é gerente, então
+			//recebe o uid de cada empresa que o gerente tem acesso
+			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_added', function (dados) {
+				// busca dentro de cada empresa os usuários que estão conectados à ela
+				firebase.database().ref('empresas/' + dados.key).once('value').then(function (_dados) {
+					for (let usu in _dados.val().usuarios) {
+						if (Usuarios[usu] == undefined) {
+							Usuarios.findOne(usu).then(function (usuario) {
+								if (Usuarios[usu] == undefined) {
+									Usuarios[usuario.uid] = usuario;
+									if (typeof Usuarios.callbackAdded == "function") Usuarios.callbackAdded(usuario);
+								}
+							}).catch(function (err) {
+								console.log(err);
+							});
+						}
+					}
+				}).catch(function (err) {
+					console.log("Erro ao buscar os usuarios das empresas.");
+					console.log(err);
+				});
+			});
+		}
 	},
 	findOne(uid) {
 		return new Promise(
 			function (resolve, reject) {
-				firebase.database().ref('/usuarios/' + uid).once('value').then(function (_dados) {
+				firebase.database().ref('usuarios/' + uid).once('value').then(function (_dados) {
 					if (!_dados.val()) {
 						reject("Nenhum usuário encontrado!");
 					}

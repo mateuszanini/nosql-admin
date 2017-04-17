@@ -1,21 +1,36 @@
 {
   "rules": {
     "empresas": {
-      //Administradores podem ler e escrever em todos os nós
-      ".read": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
-      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
-      //Usuários não administradores somente tem acesso às empresas que estão no seu nó empresas
+      //Administradores ativos podem ler e escrever em todos os nós
+      ".read": "root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin' && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      ".write": "root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin' && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      //Usuários ativos não administradores somente tem acesso às empresas que estão no seu nó empresas
       "$uid": {
-        ".read": "root.child('usuarios/' + auth.uid + '/empresas/' + $uid).exists() && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+        ".read": "root.child('usuarios/' + auth.uid + '/empresas/' + $uid).val() == true && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+        ".write": "root.child('usuarios/' + auth.uid + '/empresas/' + $uid).val() == true && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
       }
     },
     "usuarios": {
-      //Administradores podem ler e escrever em todos os nós
-      ".read": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
-      ".write": "root.child('usuarios/' + auth.uid).child('tipo').val() == 'admin' && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
-      //Usuários não administradores tem acesso somente ao seu nó
-    	"$uid": {
-        ".read": "auth.uid === $uid && auth != null && root.child('usuarios/' + auth.uid).child('ativo').val() == true"
+      //Administradores ativos podem ler e escrever em todos os nós
+      ".read": "root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin' && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      ".write": "root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+      //acessos restritos
+      "$uid": {
+        //Gerentes ativos tem acesso à nós específicos, de usuarios gerentes e operadores
+        //Operadores ativos tem acesso somente ao seu próprio nó
+        ".read": "(auth.uid === $uid || (root.child('usuarios/'+ $uid + '/tipo').val() == 'operador' || root.child('usuarios/'+ $uid + '/tipo').val() == 'gerente') && root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente') && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+        ".write": "(auth.uid === $uid || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente') && root.child('usuarios/' + auth.uid).child('ativo').val() == true",
+        "tipo": {
+          //Se tentar gravar um admin ou gerente e for admin
+          //Se tentar gravar um operador e
+          //for o proprio usuario
+          //gerente ou admin
+          //Se tentar gravar um gerente e
+          //for o proprio usuario
+          //ou admin
+          //".validate": "((newData.val() == 'admin' || newData.val() == 'gerente') && root.child('usuarios/'+ auth.uid + '/tipo').val() =='admin') ||(newData.val() == 'operador' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente' || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'))||(newData.val() == 'gerente' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'))"
+          ".validate": "((newData.val() == 'admin' || newData.val() == 'gerente') && root.child('usuarios/'+ auth.uid + '/tipo').val() =='admin')|| (newData.val() == 'operador' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente' || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin')) ||(newData.val() == 'gerente' && (root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente') || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin')"
+        }
       }
     }
   }

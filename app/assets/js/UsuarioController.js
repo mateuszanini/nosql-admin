@@ -56,15 +56,24 @@ var UsuarioController = {
                     _dados[n['name']] = n['value'];
                 }
             });
-
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
             if (_dados.tipoUsuario != "") usuario.tipo = _dados.tipoUsuario;
 
-            console.log(_dados);
 
             // 		if (_dados.telefones) usu.telefones = _dados.telefones;
 
             //relacionamento com empresas
+            //verifica as empresas que precisam ser excluidas
+            //transforma os objetos em arrays e verifica a diferença entre eles
+            let del = $.map(usuario.empresas, function (value, index) {
+                return [index];
+            }).diff($.map(_dados.empresas, function (value, index) {
+                return [index];
+            }));
+            for (let i = 0; i < del.length; i++) {
+                usuario.removeEmpresa(del[i]);
+            }
+
             //verifica as empresas que precisam ser adicionadas
             //transforma os objetos em arrays e verifica a diferença entre eles
             let add = $.map(_dados.empresas, function (value, index) {
@@ -76,27 +85,17 @@ var UsuarioController = {
                 usuario.addEmpresa(add[i]);
             }
 
-            //verifica as empresas que precisam ser excluidas
-            //transforma os objetos em arrays e verifica a diferença entre eles
-            let del = $.map(usuario.empresas, function (value, index) {
-                return [index];
-            }).diff($.map(_dados.empresas, function (value, index) {
-                return [index];
-            }));
-            for (let i = 0; i < del.length; i++) {
-                usuario.removeEmpresa(del[i]);
-            }
-            
             usuario.save()
                 .then(function () {
                     console.log('ok');
                     $('#modalUsuario').modal('close');
+                    location.reload();
                     return false;
                 })
                 .catch(function (err) {
                     console.log(err);
                     $('#modalUsuario').modal('close');
-                    return false;
+                   return false;
                 });
             return false;
         });

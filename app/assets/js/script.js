@@ -47,7 +47,7 @@ var app = {
                 console.log("Está logado");
                 Usuarios.findOne(user.uid).then(function (usuario) {
                     Empresas.init(usuario);
-                    Usuarios.init();
+                    Usuarios.init(usuario);
                     $('#preloaderCarregando').addClass('hide');
                     $('#bg').addClass('hide');
                     $('#conteudo').removeClass('hide');
