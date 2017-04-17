@@ -28,7 +28,7 @@
 
     <!-- TELA DE LOGIN -->
     <div class="blue lighten-1" id="bg">
-        <!-- Indicador de carregamento -->
+        <!-- Indicador de carregamento 
         <div class="row center-align" id="preloaderCarregando">
             <div class="preloader-wrapper active">
                 <div class="spinner-layer spinner-red-only">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <!-- Painel de login -->
         <div class="row hide" id="painelLogin">
@@ -126,9 +126,11 @@
         </nav>
 
         <div id="tabUsuarios" class="col s12 m12 l12">
-            <div class="row" id="painelUsuarios">
+            <div class="row">
                 <!--aqui vem a lista de usuários-->
-                
+                <ul class="collection" id="collectionUsuarios">
+
+                </ul>
             </div>
             <!--row -->
         </div>
@@ -226,6 +228,25 @@
         </form>
     </div>
 
+    <!-- Modal Preloader -->
+    <div id="modalPreloader" class="modal valign-wrapper col l2 m3">
+        <div class="modal-content center-align">
+            <div class="preloader-wrapper active" id="preloaderInModal">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
@@ -245,6 +266,7 @@
 
     <script>
         $(document).ready(function() {
+            app.preloader('open');
             app.initialize();
             //Empresas.init();
             //Usuarios.init();

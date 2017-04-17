@@ -66,3 +66,13 @@
 .collection .collection-item span{
     padding-left: 30px;
 }
+
+#modalPreloader{
+    top: 30% !important;
+    width: 132px;
+    
+}
+
+#preloaderInModal{
+    margin: 15px;
+}

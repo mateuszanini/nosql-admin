@@ -185,8 +185,7 @@ var UsuarioController = {
 
 
 Usuarios.callbackAdded = function (usuario) {
-    var newItem = '<ul class="collection">' + 
-                        '<li class="collection-item" id="li-' + usuario.uid +'">' +
+    var newItem = '<li class="collection-item" id="li-' + usuario.uid +'">' +
                         '<div>' +
                             '<span id="itemNome">' + usuario.nome + '</span>' +
                             '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
@@ -218,9 +217,7 @@ Usuarios.callbackAdded = function (usuario) {
         "</div>" +
         "</div>" +
         "</div>";*/
-
-    newItem += '</ul>';
-    $('#painelUsuarios').append(newItem);
+    $('#collectionUsuarios').append(newItem);
 
     $('.dropdown-button').dropdown({
         hover: true,
