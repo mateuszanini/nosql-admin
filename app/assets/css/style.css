@@ -54,3 +54,15 @@
     padding-bottom: 5px !important;
     padding-top: 5px !important;
 }
+
+.collection .collection-item{
+    line-height: 2.5rem;
+}
+
+.collection .collection-item span:first-child{
+    padding-left: 0px;
+}
+
+.collection .collection-item span{
+    padding-left: 30px;
+}

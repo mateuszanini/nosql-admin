@@ -8,8 +8,10 @@ var UsuarioController = {
 
         //preenche o nome
         $('#nomeUsuario').val(usuario.nome);
+        $('#nomeUsuario').focusin();
         //preenche o email
         $('#emailUsuario').val(usuario.email).prop('disabled', true);
+        $('#emailUsuario').focusin();
 
         //seleciona o tipo do usuario
         $('#tipoUsuario').val(usuario.tipo).change();
@@ -183,7 +185,20 @@ var UsuarioController = {
 
 
 Usuarios.callbackAdded = function (usuario) {
-    var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
+    var newItem = '<ul class="collection">' + 
+                        '<li class="collection-item" id="li-' + usuario.uid +'">' +
+                        '<div>' +
+                            '<span id="itemNome">' + usuario.nome + '</span>' +
+                            '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
+                            '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
+                            '<a href="#!" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
+                        '</div>' +
+                    '</li>' +
+                    '<ul id="dropdown-' + usuario.uid +'"  class="dropdown-content">' +
+                        '<li><a href="#!">Editar</a></li>' +
+                        '<li><a href="#!">Inativar</a></li>' +
+                    '</ul>';
+   /* var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
         "<div class=\"card z-depth-3\">" +
         "<div class=\"card-content\">" +
         "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
@@ -202,9 +217,10 @@ Usuarios.callbackAdded = function (usuario) {
         "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
         "</div>" +
         "</div>" +
-        "</div>";
+        "</div>";*/
 
-    $('#painelUsuarios').append(newCard);
+    newItem += '</ul>';
+    $('#painelUsuarios').append(newItem);
 
     $('.dropdown-button').dropdown({
         hover: true,
