@@ -107,8 +107,100 @@ var UsuarioController = {
     },
     editarPerfil() {
         console.log("Editando...");
-        console.log(Usuarios[firebase.auth().currentUser.uid]);
-        UsuarioController.editar(firebase.auth().currentUser.uid);
+        let usuario = Usuarios[firebase.auth().currentUser.uid];
+        $('#tituloModalUsuario').html('Editar meu perfil');
+        $('#btnSalvaUsuario').html('Salvar');
+        $('#formUsuario').unbind('submit');
+
+        //preenche o nome
+        $('#nomeUsuario').val(usuario.nome);
+        //preenche o email
+        $('#emailUsuario').val(usuario.email).prop('disabled', false);
+
+        //seleciona o tipo do usuario
+        $('#tipoUsuario').val(usuario.tipo).change();
+        $("#tipoUsuario").attr('disabled', true);
+
+        //preenche select das empresas        
+        $("#empresaUsuario").html('');
+        $("#empresaUsuario").append(
+            $('<option/>')
+                .text("Nenhuma empresa selecionada")
+                .attr('selected', true)
+                .attr('disabled', true)
+        );
+        try {
+            $.map(Empresas, function (n, i) {
+                if (typeof n == 'object' && n) {
+                    if (usuario.empresas[n.uid]) {
+                        $("#empresaUsuario").append(
+                            $('<option/>')
+                                .attr('value', n.uid)
+                                .text(n.nomeFantasia)
+                                .attr('selected', true)
+                        );
+                    }
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        $("#empresaUsuario").attr('disabled', true);
+        $('select').material_select();
+        //adiciona evento para quando enviar o formulario
+        $('#formUsuario').submit(function (event) {
+            console.log("usuario antes");
+            console.log(usuario);
+            event.preventDefault();
+            //serializa o form
+            var unindexed_array = $(this).serializeArray();
+            var _dados = {};
+            $.map(unindexed_array, function (n, i) {
+                _dados[n['name']] = n['value'];
+            });
+            if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
+
+            if (_dados.emailUsuario != "") {
+                if (usuario.email != _dados.emailUsuario) {
+                    usuario.email = _dados.emailUsuario;
+                    console.log("Alterando  o email do usuario...");
+                    firebase.auth().currentUser.updateEmail(usuario.email).then(function () {
+                        usuario.save()
+                            .then(function () {
+                                console.log('ok');
+                                $('#modalUsuario').modal('close');
+                                location.reload();
+                                return false;
+                            })
+                            .catch(function (err) {
+                                console.log(err);
+                                $('#modalUsuario').modal('close');
+                                return false;
+                            });
+                    }, function (error) {
+                        console.log("Não pode alterar o email do usuario");
+                        console.log(error);
+                        $('#modalUsuario').modal('close');
+                        return false;
+                    });
+                } else {
+                    usuario.save()
+                        .then(function () {
+                            console.log('ok');
+                            $('#modalUsuario').modal('close');
+                            location.reload();
+                            return false;
+                        })
+                        .catch(function (err) {
+                            console.log(err);
+                            $('#modalUsuario').modal('close');
+                            return false;
+                        });
+                    return false;
+                }
+            }
+        });
+        $('#modalUsuario').modal('open');
     },
     alteraEstado(uid) {
         Usuarios[uid].ativo = !Usuarios[uid].ativo;
