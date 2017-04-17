@@ -88,6 +88,20 @@ var app = {
         $("#usrLogoutMenu").click(function () {
             app.logout();
         });
+
+        $("#usrLogoutMenuColapsed").click(function () {
+            app.logout();
+        });
+
+        $("#usrLogadoMenu").click(function () {
+            UsuarioController.editarPerfil();
+        });
+
+        $("#usrLogadoMenuColapsed").click(function () {
+            UsuarioController.editarPerfil();
+        });
+
+
         //redefinir senha
         $("#btnRedefinirSenha").click(function () {
             app.redefinirSenha();
