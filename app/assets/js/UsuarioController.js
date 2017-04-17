@@ -158,6 +158,8 @@ var UsuarioController = {
 
         $('#emailUsuario').val('').prop('disabled', false);
         $('#nomeUsuario').val('');
+        //preenche modal dos tipos de usuario, mostrando as opções liberadas para o usuario atual
+        
         //preenche select das empresas
         $("#empresaUsuario").html('');
         $("#empresaUsuario").append(

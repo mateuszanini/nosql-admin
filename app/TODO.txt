@@ -1,0 +1,10 @@
+restingir o tipo de usuario que pode ser cadastrado por um usuario epscifico
+criar um objeto global com o usuario que está logado no momento
+não mostar o próprio usuário na lista de usuarios
+fazer campos de busca e filtros nos usuarios
+retirar a opção de alterar as empresas do proprio usuario
+tirar o botao de cadastrar usuario quando for operador
+
+incluir campo de telefone no cadastro de usuario
+
+arrumar css do modal de usuario

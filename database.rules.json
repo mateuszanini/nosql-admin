@@ -28,8 +28,26 @@
           //Se tentar gravar um gerente e
           //for o proprio usuario
           //ou admin
-          //".validate": "((newData.val() == 'admin' || newData.val() == 'gerente') && root.child('usuarios/'+ auth.uid + '/tipo').val() =='admin') ||(newData.val() == 'operador' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente' || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'))||(newData.val() == 'gerente' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'))"
-          ".validate": "((newData.val() == 'admin' || newData.val() == 'gerente') && root.child('usuarios/'+ auth.uid + '/tipo').val() =='admin')|| (newData.val() == 'operador' && (auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente' || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin')) ||(newData.val() == 'gerente' && (root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente') || root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin')"
+          ".validate": "
+          (
+            newData.val() == 'admin' &&
+            root.child('usuarios/'+ auth.uid + '/tipo').val() =='admin'
+          )
+          || 
+            (
+              newData.val() == 'operador' && 
+              (
+                auth.uid === $uid ||root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente' ||
+                root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'
+              )
+          	)
+          ||
+            (
+                newData.val() == 'gerente' && 
+                (root.child('usuarios/'+ auth.uid + '/tipo').val() == 'gerente') ||
+                  root.child('usuarios/'+ auth.uid + '/tipo').val() == 'admin'
+            )
+          "
         }
       }
     }

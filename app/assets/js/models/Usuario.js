@@ -135,7 +135,7 @@ var Usuarios = {
 		}
 		if (usuario.tipo == 'gerente') {
 			//O gerente tem acesso somente aos usuarios das empresas que ele é gerente, então
-			//recebe o uid de cada empresa que o gerente tem acesso
+			//recebe o uid de cada empresa que o gerente tem acesso e busca os usuarios daquela empresa
 			firebase.database().ref('usuarios/' + usuario.uid + '/empresas').on('child_added', function (dados) {
 				// busca dentro de cada empresa os usuários que estão conectados à ela
 				firebase.database().ref('empresas/' + dados.key).once('value').then(function (_dados) {
