@@ -46,8 +46,12 @@ var app = {
             if (user) {
                 console.log("Está logado");
                 Usuarios.findOne(user.uid).then(function (usuario) {
-                    Empresas.init(usuario);
-                    Usuarios.init(usuario);
+                    Usuarios[usuario.uid] = usuario;
+                    Empresas.init();
+                    Usuarios.init();
+                    if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") {
+                        $('#btnNovoUsuario').addClass('hide');
+                    }
                     $('#preloaderCarregando').addClass('hide');
                     $('#bg').addClass('hide');
                     $('#conteudo').removeClass('hide');

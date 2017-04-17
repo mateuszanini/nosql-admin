@@ -1,5 +1,5 @@
 var UsuarioController = {
-    editar: function (uid) {
+    editar: function(uid) {
         let usuario = Usuarios[uid];
 
         $('#tituloModalUsuario').html('Editar usuário');
@@ -22,7 +22,8 @@ var UsuarioController = {
                 .attr('selected', true)
                 .attr('disabled', true)
         );
-        $.map(Empresas, function (n, i) {
+        try{
+        $.map(Empresas, function(n, i) {
             if (typeof n == 'object' && n) {
                 if (usuario.empresas[n.uid]) {
                     $("#empresaUsuario").append(
@@ -40,15 +41,18 @@ var UsuarioController = {
                 }
             }
         });
+        }catch(e){
+            console.log(e);
+        }
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
-        $('#formUsuario').submit(function (event) {
+        $('#formUsuario').submit(function(event) {
             event.preventDefault();
             //serializa o form
             var unindexed_array = $(this).serializeArray();
             var _dados = {};
             _dados.empresas = {};
-            $.map(unindexed_array, function (n, i) {
+            $.map(unindexed_array, function(n, i) {
                 if (n['name'] == 'empresaUsuario') {
                     _dados.empresas[n['value']] = true;
                 }
@@ -65,9 +69,9 @@ var UsuarioController = {
             //relacionamento com empresas
             //verifica as empresas que precisam ser excluidas
             //transforma os objetos em arrays e verifica a diferença entre eles
-            let del = $.map(usuario.empresas, function (value, index) {
+            let del = $.map(usuario.empresas, function(value, index) {
                 return [index];
-            }).diff($.map(_dados.empresas, function (value, index) {
+            }).diff($.map(_dados.empresas, function(value, index) {
                 return [index];
             }));
             for (let i = 0; i < del.length; i++) {
@@ -76,9 +80,9 @@ var UsuarioController = {
 
             //verifica as empresas que precisam ser adicionadas
             //transforma os objetos em arrays e verifica a diferença entre eles
-            let add = $.map(_dados.empresas, function (value, index) {
+            let add = $.map(_dados.empresas, function(value, index) {
                 return [index];
-            }).diff($.map(usuario.empresas, function (value, index) {
+            }).diff($.map(usuario.empresas, function(value, index) {
                 return [index];
             }));
             for (let i = 0; i < add.length; i++) {
@@ -86,16 +90,16 @@ var UsuarioController = {
             }
 
             usuario.save()
-                .then(function () {
+                .then(function() {
                     console.log('ok');
                     $('#modalUsuario').modal('close');
                     location.reload();
                     return false;
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                     $('#modalUsuario').modal('close');
-                   return false;
+                    return false;
                 });
             return false;
         });
@@ -105,22 +109,23 @@ var UsuarioController = {
     alteraEstado(uid) {
         Usuarios[uid].ativo = !Usuarios[uid].ativo;
         Usuarios[uid].save()
-            .then(function () {
+            .then(function() {
                 console.log('Alterado com sucesso');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
     },
 
-    novo: function (event) {
+    novo: function(event) {
+        if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") return false;
         // Get all the forms elements and their values in one step
 
         var unindexed_array = $(this).serializeArray();
         var _dados = {};
         _dados.empresas = {};
 
-        $.map(unindexed_array, function (n, i) {
+        $.map(unindexed_array, function(n, i) {
             if (n['name'] == 'empresaUsuario') {
                 _dados.empresas[n['value']] = true;
             }
@@ -140,17 +145,18 @@ var UsuarioController = {
 
         // if (_dados.uid) usu.uid = _dados.uid;
         new Usuario(usu)
-            .then(function () {
+            .then(function() {
                 alert("Usuário criado e nova senha solicitada");
                 $('#modalUsuario').modal('close');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
         return false;
     },
 
-    mostraModalNovo: function () {
+    mostraModalNovo: function() {
+        if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") return false;
         $('#tituloModalUsuario').html('Cadastrar usuário');
         $('#btnSalvaUsuario').html('Cadastrar');
         $('#formUsuario').unbind('submit');
@@ -159,7 +165,14 @@ var UsuarioController = {
         $('#emailUsuario').val('').prop('disabled', false);
         $('#nomeUsuario').val('');
         //preenche modal dos tipos de usuario, mostrando as opções liberadas para o usuario atual
-        
+        if (Usuarios[firebase.auth().currentUser.uid].tipo == "admin") {
+            $("#tipoUsuario option[value='admin']").attr('disabled', false);
+            $("#tipoUsuario option[value='gerente']").attr('disabled', false);
+        }
+        if (Usuarios[firebase.auth().currentUser.uid].tipo == "gerente") {
+            $("#tipoUsuario option[value='admin']").attr('disabled', true);
+            $("#tipoUsuario option[value='gerente']").attr('disabled', false);
+        }
         //preenche select das empresas
         $("#empresaUsuario").html('');
         $("#empresaUsuario").append(
@@ -168,7 +181,7 @@ var UsuarioController = {
                 .attr('selected', true)
                 .attr('disabled', true)
         );
-        $.map(Empresas, function (n, i) {
+        $.map(Empresas, function(n, i) {
             if (typeof n == 'object' && n) {
                 $("#empresaUsuario").append(
                     $('<option/>')
@@ -182,7 +195,7 @@ var UsuarioController = {
 };
 
 
-Usuarios.callbackAdded = function (usuario) {
+Usuarios.callbackAdded = function(usuario) {
     var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
         "<div class=\"card z-depth-3\">" +
         "<div class=\"card-content\">" +
@@ -216,7 +229,7 @@ Usuarios.callbackAdded = function (usuario) {
 
 }
 
-Usuarios.callbackChanged = function (usuario) {
+Usuarios.callbackChanged = function(usuario) {
     console.log(usuario.nome + " alterado!");
     var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
         "<div class=\"card z-depth-3\">" +
@@ -251,7 +264,7 @@ Usuarios.callbackChanged = function (usuario) {
 
 }
 
-Usuarios.callbackRemoved = function (uid) {
+Usuarios.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
     $('#div-' + uid).remove();
 }

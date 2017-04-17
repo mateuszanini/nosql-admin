@@ -1,10 +1,9 @@
-restingir o tipo de usuario que pode ser cadastrado por um usuario epscifico
-criar um objeto global com o usuario que está logado no momento
-não mostar o próprio usuário na lista de usuarios
+FEITO: restingir o tipo de usuario que pode ser cadastrado por um usuario epscifico
+FEITO: criar um objeto global com o usuario que está logado no momento (NÃO PRECISA, USAR Usuarios[firebase.auth().currentUser.uid] )
+FEITO: não mostar o próprio usuário na lista de usuarios
+EM ANDAMENTO: Não atrelar empresas nos admins
 fazer campos de busca e filtros nos usuarios
 retirar a opção de alterar as empresas do proprio usuario
-tirar o botao de cadastrar usuario quando for operador
-
+FEITO: tirar o botao de cadastrar usuario quando for operador
 incluir campo de telefone no cadastro de usuario
-
 arrumar css do modal de usuario
