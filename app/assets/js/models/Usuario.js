@@ -5,7 +5,7 @@ class Usuario {
 		if (_dados.nome) this.nome = _dados.nome;
 		if (_dados.tipo) this.tipo = _dados.tipo;
 		else this.tipo = "operador";
-		if (_dados.telefones) this.telefones = _dados.telefones;
+		if (_dados.telefone) this.telefone = _dados.telefone;
 		//campos de controle
 		if (_dados.ativo != undefined) {
 			this.ativo = _dados.ativo;

@@ -11,6 +11,13 @@ var UsuarioController = {
         //preenche o email
         $('#emailUsuario').val(usuario.email).prop('disabled', true);
 
+        //preenche o telefone
+        $('#telefoneUsuario').val(usuario.telefone);
+        $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
+
+        $("#tipoUsuario").attr('disabled', false);
+        $("#empresaUsuario").attr('disabled', false);
+
         //seleciona o tipo do usuario
         $('#tipoUsuario').val(usuario.tipo).change();
 
@@ -62,9 +69,7 @@ var UsuarioController = {
             });
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
             if (_dados.tipoUsuario != "") usuario.tipo = _dados.tipoUsuario;
-
-
-            // 		if (_dados.telefones) usu.telefones = _dados.telefones;
+            if (_dados.telefoneUsuario) usuario.telefone = _dados.telefoneUsuario;
 
             //relacionamento com empresas
             //verifica as empresas que precisam ser excluidas
@@ -116,6 +121,9 @@ var UsuarioController = {
         $('#nomeUsuario').val(usuario.nome);
         //preenche o email
         $('#emailUsuario').val(usuario.email).prop('disabled', false);
+        //preenche o telefone
+        $('#telefoneUsuario').val(usuario.telefone);
+        $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
 
         //seleciona o tipo do usuario
         $('#tipoUsuario').val(usuario.tipo).change();
@@ -159,6 +167,7 @@ var UsuarioController = {
                 _dados[n['name']] = n['value'];
             });
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
+            if (_dados.telefoneUsuario) usuario.telefone = _dados.telefoneUsuario;
 
             if (_dados.emailUsuario != "") {
                 if (usuario.email != _dados.emailUsuario) {
@@ -234,7 +243,7 @@ var UsuarioController = {
         if (_dados.emailUsuario != "") usu.email = _dados.emailUsuario;
         if (_dados.nomeUsuario != "") usu.nome = _dados.nomeUsuario;
         if (_dados.tipoUsuario != "") usu.tipo = _dados.tipoUsuario;
-        // 		if (_dados.telefones) usu.telefones = _dados.telefones;
+        if (_dados.telefoneUsuario) usu.telefone = _dados.telefoneUsuario;
         //relacionamento com empresas
         if (_dados.empresas) usu.empresas = _dados.empresas;
         else usu.empresas = {};
@@ -242,11 +251,12 @@ var UsuarioController = {
         // if (_dados.uid) usu.uid = _dados.uid;
         new Usuario(usu)
             .then(function () {
-                alert("Usuário criado e nova senha solicitada");
+                console.log("Usuário criado e nova senha solicitada");
                 $('#modalUsuario').modal('close');
+                location.reload();
             })
             .catch(function (err) {
-                alert(err);
+                console.log(err);
             });
         return false;
     },
@@ -257,6 +267,8 @@ var UsuarioController = {
         $('#btnSalvaUsuario').html('Cadastrar');
         $('#formUsuario').unbind('submit');
         $('#formUsuario').submit(UsuarioController.novo);
+
+        $('#chamarUsuario').attr("href", "javascript:void(0);");
 
         $('#emailUsuario').val('').prop('disabled', false);
         $('#nomeUsuario').val('');
