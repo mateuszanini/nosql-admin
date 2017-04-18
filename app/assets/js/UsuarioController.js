@@ -108,13 +108,13 @@ var UsuarioController = {
                 .then(function() {
                     console.log('ok');
                     $('#modalUsuario').modal('close');
-                    location.reload();
-                    return false;
+                    //location.reload();
+                    app.preloader('close');
                 })
                 .catch(function(err) {
                     console.log(err);
                     $('#modalUsuario').modal('close');
-                    return false;
+                    app.preloader('close');
                 });
             return false;
         });
@@ -191,19 +191,16 @@ var UsuarioController = {
                             .then(function() {
                                 console.log('ok');
                                 $('#modalUsuario').modal('close');
-                                location.reload();
-                                return false;
+                                //location.reload();
                             })
                             .catch(function(err) {
                                 console.log(err);
                                 $('#modalUsuario').modal('close');
-                                return false;
                             });
                     }, function(error) {
                         console.log("Não pode alterar o email do usuario");
                         console.log(error);
                         $('#modalUsuario').modal('close');
-                        return false;
                     });
                 }
                 else {
@@ -212,12 +209,10 @@ var UsuarioController = {
                             console.log('ok');
                             $('#modalUsuario').modal('close');
                             location.reload();
-                            return false;
                         })
                         .catch(function(err) {
                             console.log(err);
                             $('#modalUsuario').modal('close');
-                            return false;
                         });
                     return false;
                 }
@@ -285,7 +280,7 @@ var UsuarioController = {
             .then(function() {
                 console.log("Usuário criado e nova senha solicitada");
                 $('#modalUsuario').modal('close');
-                location.reload();
+                //location.reload();
             })
             .catch(function(err) {
                 console.log(err);
