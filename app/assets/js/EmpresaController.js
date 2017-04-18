@@ -1,9 +1,9 @@
 var EmpresaController = {
-    editar: function (uid) {
+    editar: function(uid) {
         if (Usuarios[firebase.auth().currentUser.uid].tipo != "admin") return false;
         let empresa = Empresas[uid];
 
-        $('#tituloModalEmpresa').html('Editar usuário');
+        $('#tituloModalEmpresa').html('Editar empresa');
         $('#btnSalvaEmpresa').html('Salvar');
         $('#formEmpresa').unbind('submit');
 
@@ -11,27 +11,26 @@ var EmpresaController = {
         $('#nomeFantasiaEmpresa').val(empresa.nomeFantasia).focusin();
         $('#razaoSocialEmpresa').val(empresa.razaoSocial).focusin();
         $('#cnpjEmpresa').val(empresa.cnpj).focusin();
-        $('#inscricaEstadualEmpresa').val(empresa.inscricaoEstadual).focusin();
+        $('#inscricaoEstadualEmpresa').val(empresa.inscricaoEstadual).focusin();
         $('#inscricaoMunicipalEmpresa').val(empresa.inscricaoMunicipal).focusin();
         $('#telefoneEmpresa').val(empresa.telefone).focusin();
-        $('#chamarEmpresa').attr("href", "tel:" + empresa.telefone);
         $('#emailEmpresa').val(empresa.email).focusin();
-        $('#logradouroEmpresa').val(empresa.logradouro).focusin();
-        $('#numeroEmpresa').val(empresa.numero).focusin();
-        $('#complementoEmpresa').val(empresa.complemento).focusin();
-        $('#bairroEmpresa').val(empresa.bairro).focusin();
-        $('#cepEmpresa').val(empresa.cep).focusin();
-        $('#cidadeEmpresa').val(empresa.cidade).focusin();
-        $('#estadoEmpresa').val(empresa.estado).focusin();
-        $('#paisEmpresa').val(empresa.pais).focusin();
+        $('#logradouroEmpresa').val(empresa.endereco.logradouro).focusin();
+        $('#numeroEmpresa').val(empresa.endereco.numero).focusin();
+        $('#complementoEmpresa').val(empresa.endereco.complemento).focusin();
+        $('#bairroEmpresa').val(empresa.endereco.bairro).focusin();
+        $('#cepEmpresa').val(empresa.endereco.cep).focusin();
+        $('#cidadeEmpresa').val(empresa.endereco.cidade).focusin();
+        $('#estadoEmpresa').val(empresa.endereco.estado).focusin();
+        $('#paisEmpresa').val(empresa.endereco.pais).focusin();
 
 
         //adiciona evento para quando enviar o formulario
-        $('#formUsuario').submit(function (event) {
+        $('#formEmpresa').submit(function(event) {
             event.preventDefault();
             var unindexed_array = $(this).serializeArray();
             var _dados = {};
-            $.map(unindexed_array, function (n, i) {
+            $.map(unindexed_array, function(n, i) {
                 _dados[n['name'].replace("Empresa", "")] = n['value'];
             });
 
@@ -44,22 +43,23 @@ var EmpresaController = {
             empresa.inscricaoMunicipal = _dados.inscricaoMunicipal;
             empresa.telefone = _dados.telefone;
             if (_dados.email != "") empresa.email = _dados.email;
-            empresa.endereco.logradouro = _dados.endereco.logradouro;
-            empresa.endereco.numero = _dados.endereco.numero;
-            empresa.endereco.complemento = _dados.endereco.complemento;
-            empresa.endereco.bairro = _dados.endereco.bairro;
-            empresa.endereco.cep = _dados.endereco.cep;
-            empresa.endereco.cidade = _dados.endereco.cidade;
-            empresa.endereco.estado = _dados.endereco.estado;
-            empresa.endereco.pais = _dados.endereco.pais;
+            if(empresa.endereco == undefined) empresa.endereco = {};
+            empresa.endereco.logradouro = _dados.logradouro;
+            empresa.endereco.numero = _dados.numero;
+            empresa.endereco.complemento = _dados.complemento;
+            empresa.endereco.bairro = _dados.bairro;
+            empresa.endereco.cep = _dados.cep;
+            empresa.endereco.cidade = _dados.cidade;
+            empresa.endereco.estado = _dados.estado;
+            empresa.endereco.pais = _dados.pais;
 
             empresa.save()
-                .then(function () {
+                .then(function() {
                     console.log('ok');
                     $('#modalEmpresa').modal('close');
                     return false;
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                     $('#modalEmpresa').modal('close');
                     return false;
@@ -73,36 +73,38 @@ var EmpresaController = {
     alteraEstado(uid) {
         Empresas[uid].ativo = !Empresas[uid].ativo;
         Empresas[uid].save()
-            .then(function () {
+            .then(function() {
                 console.log('Alterada com sucesso');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
     },
 
-    novo: function (event) {
+    novo: function(event) {
         if (Usuarios[firebase.auth().currentUser.uid].tipo != "admin") return false;
 
         var unindexed_array = $(this).serializeArray();
         var _dados = {};
-        $.map(unindexed_array, function (n, i) {
-            _dados[n['name'].replace("Empresa", "")] = n['value'];
+        $.map(unindexed_array, function(n, i) {
+            if (n['value'] != "") {
+                _dados[n['name'].replace("Empresa", "")] = n['value'];
+            }
         });
 
         console.log(_dados);
         new Empresa(_dados)
-            .then(function () {
+            .then(function() {
                 console.log("Empresa criada com sucesso");
                 $('#modalEmpresa').modal('close');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
         return false;
     },
 
-    mostraModalNovo: function () {
+    mostraModalNovo: function() {
         if (Usuarios[firebase.auth().currentUser.uid].tipo != "admin") return false;
         $('#tituloModalEmpresa').html('Cadastrar empresa');
         $('#btnSalvaEmpresa').html('Cadastrar');
@@ -113,7 +115,7 @@ var EmpresaController = {
         $('#nomeFantasiaEmpresa').val('');
         $('#razaoSocialEmpresa').val('');
         $('#cnpjEmpresa').val('');
-        $('#inscricaEstadualEmpresa').val('');
+        $('#inscricaoEstadualEmpresa').val('');
         $('#inscricaoMunicipalEmpresa').val('');
         $('#telefoneEmpresa').val('');
         $('#emailEmpresa').val('');
@@ -131,7 +133,7 @@ var EmpresaController = {
 };
 
 
-Empresas.callbackAdded = function (empresa) {
+Empresas.callbackAdded = function(empresa) {
     var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
         '<div>' +
         '<span id="itemNome">' + empresa.nomeFantasia + '</span>' +
@@ -141,7 +143,7 @@ Empresas.callbackAdded = function (empresa) {
     $('#collectionEmpresas').append(newItem);
 };
 
-Empresas.callbackChanged = function (empresa) {
+Empresas.callbackChanged = function(empresa) {
     var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
         '<div>' +
         '<span id="itemNome">' + empresa.nomeFantasia + '</span>' +
@@ -151,7 +153,7 @@ Empresas.callbackChanged = function (empresa) {
     $('#li-' + usuario.uid).replaceWith(newItem);
 };
 
-Empresas.callbackRemoved = function (uid) {
+Empresas.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
     $('#div-' + uid).remove();
 };
