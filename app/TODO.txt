@@ -7,3 +7,16 @@ FEITO: retirar a opção de alterar as empresas do proprio usuario
 FEITO: tirar o botao de cadastrar usuario quando for operador
 FEITO: incluir campo de telefone no cadastro de usuario
 FEITO: arrumar css do modal de usuario
+
+Campos Obrigatórios
+Usuarios:
+    Nome
+    Email
+
+Empresas:
+    nomeFantasia
+    cnpj
+    email
+    endereco:
+        cidade
+        estado
