@@ -226,17 +226,17 @@ var UsuarioController = {
         $('#modalUsuario').modal('open');
     },
 
-    mostraModalAtivo: function(uid) {
+    alteraEstado: function(uid) {
         if (Usuarios[uid].ativo) {
-            $('#tituloModalAtivo').html("Inativar usuário " + Usuarios[uid].nome + "?");
+            $('#tituloModalAtivo').html("<b>Inativar</b> usuário " + Usuarios[uid].nome + "?");
         }
         else {
-            $('#tituloModalAtivo').html("Ativar  usuário " + Usuarios[uid].nome + "?");
+            $('#tituloModalAtivo').html("<b>Ativar</b>  usuário " + Usuarios[uid].nome + "?");
         }
 
-        $("#alteraEstadoUsuario").unbind('click');
+        $("#btnAlteraEstado").unbind('click');
         
-        $("#alteraEstadoUsuario").click(function() {
+        $("#btnAlteraEstado").click(function() {
             $('#modalAtivo').modal('close');
             app.preloader('open');
             Usuarios[uid].ativo = !Usuarios[uid].ativo;
@@ -374,12 +374,12 @@ Usuarios.callbackAdded = function(usuario) {
         '<i class="material-icons">mode_edit</i></a>';
     if (usuario.ativo) {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box</i></a>';
     }
     else {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
 
@@ -424,12 +424,12 @@ Usuarios.callbackChanged = function(usuario) {
         '<i class="material-icons">mode_edit</i></a>';
     if (usuario.ativo) {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box</i></a>';
     }
     else {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
 
@@ -442,5 +442,5 @@ Usuarios.callbackChanged = function(usuario) {
 
 Usuarios.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
-    $('#div-' + uid).remove();
+    $('#li-' + uid).remove();
 }
