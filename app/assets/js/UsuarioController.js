@@ -120,7 +120,7 @@ var UsuarioController = {
         });
         $('#modalUsuario').modal('open');
     },
-    
+
     editarPerfil: function() {
         console.log("Editando...");
         let usuario = Usuarios[firebase.auth().currentUser.uid];
@@ -326,6 +326,7 @@ Usuarios.callbackAdded = function(usuario) {
     if (usuario.uid == firebase.auth().currentUser.uid) {
         return;
     }
+
     if (usuario.tipo === "admin") {
         var usuarioTipo = "Administrador";
     }
@@ -361,17 +362,8 @@ Usuarios.callbackAdded = function(usuario) {
             'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
-    /*'<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
-        '</div>' +
-        '</li>' +
-        '<ul id="dropdown-' + usuario.uid + '"  class="dropdown-content">' +
-        '<li><a href="javascript:void(0);" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">Editar</a></li>' +
-        '<li><a href="javascript:void(0);"  onclick=\"UsuarioController.alteraEstado(\'' + usuario.uid + '\');">';
-    if (usuario.ativo) newItem += "Inativar";
-    else newItem += "Ativar";
-    
-    newItem += '</a></li>' +
-        '</ul>';*/
+
+    newItem += '</li>';
 
     $('#collectionUsuarios').append(newItem);
     $('.tooltipped').tooltip();
@@ -382,53 +374,46 @@ Usuarios.callbackChanged = function(usuario) {
     if (usuario.uid == firebase.auth().currentUser.uid) {
         return;
     }
-    /*
-        var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
-            "<div class=\"card z-depth-3\">" +
-            "<div class=\"card-content\">" +
-            "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
-            "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
-            "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-            //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-            //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-            "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
-        if (usuario.ativo) newCard += "Inativar";
-        else newCard += "Ativar";
-        newCard += "</a></li>" +
-            //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
-            "</ul>" +
-            "<h6>" + usuario.nome + "</h6>" +
-            "<p class=\"grey-text\">" + usuario.email + "</p>" +
-            "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
-            "</div>" +
-            "</div>" +
-            "</div>";
-    */
-    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
-        '<div>' +
+
+    if (usuario.tipo === "admin") {
+        var usuarioTipo = "Administrador";
+    }
+    else if (usuario.tipo === "gerente") {
+        var usuarioTipo = "Gerente";
+    }
+    else if (usuario.tipo === "operador") {
+        var usuarioTipo = "Operador";
+    }
+
+    var newItem = '';
+    if (usuario.ativo) {
+        newItem += '<li class="collection-item" id="li-' + usuario.uid + '">';
+    }
+    else {
+        newItem += '<li class="collection-item grey lighten-2" id="li-' + usuario.uid + '">';
+    }
+    newItem += '<div>' +
         '<span id="itemNome">' + usuario.nome + '</span>' +
         '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
-        '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
-        '<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
-        '</div>' +
-        '</li>' +
-        '<ul id="dropdown-' + usuario.uid + '"  class="dropdown-content">' +
-        '<li><a href="javascript:void(0);" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">Editar</a></li>' +
-        '<li><a href="javascript:void(0);"  onclick=\"UsuarioController.alteraEstado(\'' + usuario.uid + '\');">';
-    if (usuario.ativo) newItem += "Inativar";
-    else newItem += "Ativar";
-    newItem += '</a></li>' +
-        '</ul>';
+        '<span class="grey-text hide-on-small-only" id="itemTipo"><i>' + usuarioTipo + '</i></span>' +
+        //Botão Editar
+        '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+        'data-position="top" data-tooltip="Editar" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">' +
+        '<i class="material-icons">mode_edit</i></a>';
+    if (usuario.ativo) {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            '<i class="material-icons">check_box</i></a>';
+    }
+    else {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            '<i class="material-icons">check_box_outline_blank</i></a>';
+    }
+
+    newItem += '</li>';
 
     $('#li-' + usuario.uid).replaceWith(newItem);
-
-    $('.dropdown-button').dropdown({
-        hover: true,
-        constrainWidth: false,
-        gutter: 0,
-        belowOrigin: false,
-        alignment: 'right'
-    });
 
 }
 
