@@ -140,8 +140,7 @@
             <!--</div>-->
 
             <div class="fixed-action-btn">
-                <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger"
-                    data-position="left" data-tooltip="Novo usuário">
+                <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -158,8 +157,7 @@
             <!--row -->
             <!--</div>-->
             <div class="fixed-action-btn">
-                <a href="#modalEmpresa" id="btnNovaEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger"
-                    data-position="left" data-tooltip="Nova empresa">
+                <a href="#modalEmpresa" id="btnNovaEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Nova empresa">
                     <i class="material-icons">add</i>
                 </a>
             </div>
@@ -201,7 +199,7 @@
                             <input id="emailUsuario" name="emailUsuario" type="email" class="validate">
                             <label for="emailUsuario" data-error="Email inválido" data-success="">Email</label>
                         </div>
-                        <div class="input-field col s11 m6 l6">
+                        <div class="input-field col s12 m6 l6">
                             <input id="telefoneUsuario" name="telefoneUsuario" type="tel" class="validate">
                             <label for="telefoneUsuario">Telefone</label>
                         </div>
@@ -218,24 +216,7 @@
                             </select>
                             <label>Empresa</label>
                         </div>
-
-                        
-
-                        <!--
-                        <div class="input-field col s12 m6 l6">
-                            <div class="switch">
-                                <label>
-                                  Inativo
-                                  <input type="checkbox" name="ativoUsuario" id="ativoUsuario" checked>
-                                  <span class="lever"></span>
-                                  Ativo
-                                </label>
-                            </div>
-                        </div>
-                        -->
-
                     </div>
-
                 </div>
             </div>
             <div class="modal-footer">
@@ -243,6 +224,21 @@
                 <a href="#!" class="modal-action modal-close waves-effect btn-flat ">Cancelar</a>
             </div>
         </form>
+    </div>
+
+    <!-- Modal Inativar/Ativar Usuário -->
+    <div id="modalAtivo" class="modal">
+        <div class="modal-content center-align">
+            <h5 id="tituloModalAtivo"></h5>
+            <div class="row">
+                <div class="col s6 m6 l6">
+                    <a class="btn-floating btn-large waves-effect waves-light red modal-close"><i class="material-icons">close</i></a>
+                </div>
+                <div class="col s6 m6 l6">
+                    <a class="btn-floating btn-large waves-effect waves-light green" id="alteraEstadoUsuario"><i class="material-icons">check</i></a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal Empresa -->
@@ -286,8 +282,7 @@
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- data tables -->

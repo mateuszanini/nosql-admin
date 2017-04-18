@@ -225,15 +225,33 @@ var UsuarioController = {
         });
         $('#modalUsuario').modal('open');
     },
-    alteraEstado: function(uid) {
-        Usuarios[uid].ativo = !Usuarios[uid].ativo;
-        Usuarios[uid].save()
-            .then(function() {
-                console.log('Alterado com sucesso');
-            })
-            .catch(function(err) {
-                alert(err);
-            });
+
+    mostraModalAtivo: function(uid) {
+        if (Usuarios[uid].ativo) {
+            $('#tituloModalAtivo').html("Inativar usuário " + Usuarios[uid].nome + "?");
+        }
+        else {
+            $('#tituloModalAtivo').html("Ativar  usuário " + Usuarios[uid].nome + "?");
+        }
+
+        $("#alteraEstadoUsuario").unbind('click');
+        
+        $("#alteraEstadoUsuario").click(function() {
+            $('#modalAtivo').modal('close');
+            app.preloader('open');
+            Usuarios[uid].ativo = !Usuarios[uid].ativo;
+            Usuarios[uid].save()
+                .then(function() {
+                    console.log('Alterado com sucesso');
+                    app.preloader('close');
+                })
+                .catch(function(err) {
+                    alert(err);
+                    app.preloader('close');
+                });
+        });
+        
+        $('#modalAtivo').modal('open');
     },
 
     novo: function(event) {
@@ -327,6 +345,8 @@ Usuarios.callbackAdded = function(usuario) {
         return;
     }
 
+    $('.tooltipped').tooltip('remove');
+
     if (usuario.tipo === "admin") {
         var usuarioTipo = "Administrador";
     }
@@ -354,12 +374,12 @@ Usuarios.callbackAdded = function(usuario) {
         '<i class="material-icons">mode_edit</i></a>';
     if (usuario.ativo) {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box</i></a>';
     }
     else {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
 
@@ -375,6 +395,8 @@ Usuarios.callbackChanged = function(usuario) {
         return;
     }
 
+    $('.tooltipped').tooltip('remove');
+
     if (usuario.tipo === "admin") {
         var usuarioTipo = "Administrador";
     }
@@ -402,18 +424,19 @@ Usuarios.callbackChanged = function(usuario) {
         '<i class="material-icons">mode_edit</i></a>';
     if (usuario.ativo) {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box</i></a>';
     }
     else {
         newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.mostraModalAtivo(\'' + usuario.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
 
     newItem += '</li>';
 
     $('#li-' + usuario.uid).replaceWith(newItem);
+    $('.tooltipped').tooltip();
 
 }
 
