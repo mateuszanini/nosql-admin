@@ -1,5 +1,5 @@
 var app = {
-    initialize: function() {
+    initialize: function () {
         /*$('#preloaderCarregando').toggleClass('hide');
         $('#painelLogin').toggleClass('hide');*/
 
@@ -25,7 +25,7 @@ var app = {
 
         $('.tooltipped').tooltip({
             delay: 50
-                //position: 'top'
+            //position: 'top'
         });
 
         $('select').material_select();
@@ -42,7 +42,7 @@ var app = {
 
         firebase.initializeApp(app.config);
 
-        firebase.auth().onAuthStateChanged(function(user) {
+        firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
                 console.log("Está logado");
                 Usuarios.findOne(user.uid).then(function (usuario) {
@@ -57,7 +57,7 @@ var app = {
                     $('#bg').addClass('hide');
                     $('#conteudo').removeClass('hide');
                     $('.usrLogadoMenu').html('<i class="material-icons left">person</i>' + usuario.nome);
-                }).catch(function(err) {
+                }).catch(function (err) {
                     var errorCode = err.code;
                     if (errorCode == 'PERMISSION_DENIED') {
                         alert("Usuário desabilitado!");
@@ -78,16 +78,16 @@ var app = {
 
         //EVENT LISTENERS
         //login
-        $(".inputLogin").keypress(function(event) {
+        $(".inputLogin").keypress(function (event) {
             if (event.keyCode == 13) {
                 app.login()
             }
         });
-        $("#btnLogin").click(function() {
+        $("#btnLogin").click(function () {
             app.login()
         });
         //logout
-        $("#usrLogoutMenu").click(function() {
+        $("#usrLogoutMenu").click(function () {
             app.logout();
         });
 
@@ -105,16 +105,20 @@ var app = {
 
 
         //redefinir senha
-        $("#btnRedefinirSenha").click(function() {
+        $("#btnRedefinirSenha").click(function () {
             app.redefinirSenha();
         });
         //cadastrar usuário
-        $("#btnNovoUsuario").click(function() {
+        $("#btnNovoUsuario").click(function () {
             UsuarioController.mostraModalNovo();
         });
+        //cadastrar empresa
+        $("#btnNovaEmpresa").click(function () {
+            EmpresaController.mostraModalNovo();
+        });
     },
-    
-    preloader: function(status){
+
+    preloader: function (status) {
         $('#modalPreloader').modal({
             dismissible: false, // Modal can be dismissed by clicking outside of the modal
             opacity: .5/*, // Opacity of modal background
@@ -126,7 +130,7 @@ var app = {
         $('#modalPreloader').modal(status);
     },
 
-    login: function() {
+    login: function () {
         app.preloader('open');
         $('#mensagem').html("");
         var email = $('#emailLogin').val();
@@ -134,11 +138,11 @@ var app = {
 
         firebase.auth().signInWithEmailAndPassword(email, password).then(
             //sucesso
-            function() {
+            function () {
                 console.log("Logado");
             },
             //erro
-            function(error) {
+            function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 if (errorCode === 'auth/wrong-password' || errorCode === 'auth/invalid-email') {
@@ -155,32 +159,32 @@ var app = {
         //https://firebase.google.com/docs/auth/web/manage-users 
     },
 
-    logout: function() {
+    logout: function () {
         app.preloader('open');
-        firebase.auth().signOut().then(function() {
+        firebase.auth().signOut().then(function () {
             console.log("Desconectado");
             location.reload();
-        }, function(error) {
+        }, function (error) {
             console.log("Erro ao desconectar");
         });
     },
 
-    redefinirSenha: function() {
+    redefinirSenha: function () {
         app.preloader('open');
         $('#mensagem').html("");
         var auth = firebase.auth();
         var emailAddress = $('#emailRecuperarSenha').val();
 
-        auth.sendPasswordResetEmail(emailAddress).then(function() {
+        auth.sendPasswordResetEmail(emailAddress).then(function () {
             app.mensagem('Um email foi enviado para <i>' + emailAddress + '</i>', 'success');
-        }, function(error) {
+        }, function (error) {
             app.mensagem(error, 'error');
         });
         $('#modalRecuperarSenha').modal('close');
         app.preloader('close');
     },
 
-    mensagem: function(msg, status) {
+    mensagem: function (msg, status) {
         if (status === 'error') {
             var cor = "red lighten-1";
         }

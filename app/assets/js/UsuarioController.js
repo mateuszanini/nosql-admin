@@ -59,7 +59,7 @@ var UsuarioController = {
                 });
             } catch (e) {
                 //console.log(e);
-            }            
+            }
         }
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
@@ -323,9 +323,12 @@ var UsuarioController = {
 
 
 Usuarios.callbackAdded = function (usuario) {
+    if (usuario.uid == firebase.auth().currentUser.uid) {
+        return;
+    }
     var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
         '<div>' +
-       '<span id="itemNome">' + usuario.nome + '</span>' +
+        '<span id="itemNome">' + usuario.nome + '</span>' +
         '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
         '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
         '<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
@@ -371,6 +374,9 @@ Usuarios.callbackAdded = function (usuario) {
 }
 
 Usuarios.callbackChanged = function (usuario) {
+        if (usuario.uid == firebase.auth().currentUser.uid) {
+        return;
+    }
     /*
         var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
             "<div class=\"card z-depth-3\">" +
