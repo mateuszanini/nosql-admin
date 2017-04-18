@@ -15,14 +15,16 @@ var EmpresaController = {
         $('#inscricaoMunicipalEmpresa').val(empresa.inscricaoMunicipal).focusin();
         $('#telefoneEmpresa').val(empresa.telefone).focusin();
         $('#emailEmpresa').val(empresa.email).focusin();
-        $('#logradouroEmpresa').val(empresa.endereco.logradouro).focusin();
-        $('#numeroEmpresa').val(empresa.endereco.numero).focusin();
-        $('#complementoEmpresa').val(empresa.endereco.complemento).focusin();
-        $('#bairroEmpresa').val(empresa.endereco.bairro).focusin();
-        $('#cepEmpresa').val(empresa.endereco.cep).focusin();
-        $('#cidadeEmpresa').val(empresa.endereco.cidade).focusin();
-        $('#estadoEmpresa').val(empresa.endereco.estado).focusin();
-        $('#paisEmpresa').val(empresa.endereco.pais).focusin();
+        if (empresa.endereco) {
+            $('#logradouroEmpresa').val(empresa.endereco.logradouro).focusin();
+            $('#numeroEmpresa').val(empresa.endereco.numero).focusin();
+            $('#complementoEmpresa').val(empresa.endereco.complemento).focusin();
+            $('#bairroEmpresa').val(empresa.endereco.bairro).focusin();
+            $('#cepEmpresa').val(empresa.endereco.cep).focusin();
+            $('#cidadeEmpresa').val(empresa.endereco.cidade).focusin();
+            $('#estadoEmpresa').val(empresa.endereco.estado).focusin();
+            $('#paisEmpresa').val(empresa.endereco.pais).focusin();
+        }
 
 
         //adiciona evento para quando enviar o formulario
@@ -43,7 +45,7 @@ var EmpresaController = {
             empresa.inscricaoMunicipal = _dados.inscricaoMunicipal;
             empresa.telefone = _dados.telefone;
             if (_dados.email != "") empresa.email = _dados.email;
-            if(empresa.endereco == undefined) empresa.endereco = {};
+            if (empresa.endereco == undefined) empresa.endereco = {};
             empresa.endereco.logradouro = _dados.logradouro;
             empresa.endereco.numero = _dados.numero;
             empresa.endereco.complemento = _dados.complemento;
@@ -70,15 +72,33 @@ var EmpresaController = {
         $('#modalEmpresa').modal('open');
     },
 
-    alteraEstado(uid) {
-        Empresas[uid].ativo = !Empresas[uid].ativo;
-        Empresas[uid].save()
-            .then(function() {
-                console.log('Alterada com sucesso');
-            })
-            .catch(function(err) {
-                alert(err);
-            });
+    alteraEstado: function(uid) {
+        if (Empresas[uid].ativo) {
+            $('#tituloModalAtivo').html("<b>Inativar</b> empresa " + Empresas[uid].nomeFantasia + "?");
+        }
+        else {
+            $('#tituloModalAtivo').html("<b>Ativar</b>  empresa " + Empresas[uid].nomeFantasia + "?");
+        }
+
+        $("#btnAlteraEstado").unbind('click');
+
+        $("#btnAlteraEstado").click(function() {
+            $('#modalAtivo').modal('close');
+            app.preloader('open');
+            Empresas[uid].ativo = !Empresas[uid].ativo;
+            Empresas[uid].save()
+                .then(function() {
+                    console.log('Alterada com sucesso');
+                    app.preloader('close');
+                })
+                .catch(function(err) {
+                    alert(err);
+                    app.preloader('close');
+                });
+        });
+
+        $('#modalAtivo').modal('open');
+
     },
 
     novo: function(event) {
@@ -91,9 +111,31 @@ var EmpresaController = {
                 _dados[n['name'].replace("Empresa", "")] = n['value'];
             }
         });
+        var empresa = {};
+        empresa.endereco = {};
 
-        console.log(_dados);
-        new Empresa(_dados)
+        if (_dados.nomeFantasia) empresa.nomeFantasia = _dados.nomeFantasia;
+        if (_dados.razaoSocial) empresa.razaoSocial = _dados.razaoSocial;
+        if (_dados.cnpj) empresa.cnpj = _dados.cnpj;
+        if (_dados.inscricaoEstadual) empresa.inscricaoEstadual = _dados.inscricaoEstadual;
+        if (_dados.inscricaoMunicipal) empresa.inscricaoMunicipal = _dados.inscricaoMunicipal;
+        if (_dados.telefone) empresa.telefone = _dados.telefone;
+        if (_dados.email) empresa.email = _dados.email;
+
+        if (_dados.logradouro) empresa.endereco.logradouro = _dados.logradouro;
+        if (_dados.numero) empresa.endereco.numero = _dados.numero;
+        if (_dados.complemento) empresa.endereco.complemento = _dados.complemento;
+        if (_dados.bairro) empresa.endereco.bairro = _dados.bairro;
+        if (_dados.cep) empresa.endereco.cep = _dados.cep;
+        if (_dados.cidade) empresa.endereco.cidade = _dados.cidade;
+        if (_dados.estado) empresa.endereco.estado = _dados.estado;
+        if (_dados.pais) empresa.endereco.pais = _dados.pais;
+
+
+
+
+        console.log(empresa);
+        new Empresa(empresa)
             .then(function() {
                 console.log("Empresa criada com sucesso");
                 $('#modalEmpresa').modal('close');
@@ -134,26 +176,78 @@ var EmpresaController = {
 
 
 Empresas.callbackAdded = function(empresa) {
-    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
-        '<div>' +
-        '<span id="itemNome">' + empresa.nomeFantasia + '</span>' +
-        '<span class="grey-text hide-on-small-only" id="itemTipo">' + empresa.cnpj + '</span>' +
-        '</div>' +
-        '</li>';
+
+    $('.tooltipped').tooltip('remove');
+
+    var newItem = '';
+    if (empresa.ativo) {
+        newItem += '<li class="collection-item" id="li-' + empresa.uid + '">';
+    }
+    else {
+        newItem += '<li class="collection-item grey lighten-2" id="li-' + empresa.uid + '">';
+    }
+    newItem += '<div>' +
+        '<span id="itemNomeFantasia">' + empresa.nomeFantasia + '</span>' +
+        '<span class="grey-text hide-on-med-and-down" id="itemCnpj">' + empresa.cnpj + '</span>' +
+        '<span class="grey-text hide-on-small-only" id="itemTipo"><i>' + empresa.endereco.cidade + ' - ' + empresa.endereco.estado + '</i></span>' +
+        //Botão Editar
+        '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+        'data-position="top" data-tooltip="Editar" onclick="EmpresaController.editar(\'' + empresa.uid + '\');">' +
+        '<i class="material-icons">mode_edit</i></a>';
+    if (empresa.ativo) {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Inativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
+            '<i class="material-icons">check_box</i></a>';
+    }
+    else {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Ativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
+            '<i class="material-icons">check_box_outline_blank</i></a>';
+    }
+
+    newItem += '</li>';
+
     $('#collectionEmpresas').append(newItem);
+    $('.tooltipped').tooltip();
 };
 
 Empresas.callbackChanged = function(empresa) {
-    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
-        '<div>' +
-        '<span id="itemNome">' + empresa.nomeFantasia + '</span>' +
-        '<span id="itemCnpj">' + empresa.cnpj + '</span>' +
-        '</div>' +
-        '</li>';
-    $('#li-' + usuario.uid).replaceWith(newItem);
+
+    $('.tooltipped').tooltip('remove');
+
+    var newItem = '';
+    if (empresa.ativo) {
+        newItem += '<li class="collection-item" id="li-' + empresa.uid + '">';
+    }
+    else {
+        newItem += '<li class="collection-item grey lighten-2" id="li-' + empresa.uid + '">';
+    }
+    newItem += '<div>' +
+        '<span id="itemNomeFantasia">' + empresa.nomeFantasia + '</span>' +
+        '<span class="grey-text hide-on-med-and-down" id="itemCnpj">' + empresa.cnpj + '</span>' +
+        '<span class="grey-text hide-on-small-only" id="itemTipo"><i>' + empresa.endereco.cidade + ' - ' + empresa.endereco.estado + '</i></span>' +
+        //Botão Editar
+        '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+        'data-position="top" data-tooltip="Editar" onclick="EmpresaController.editar(\'' + empresa.uid + '\');">' +
+        '<i class="material-icons">mode_edit</i></a>';
+    if (empresa.ativo) {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Inativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
+            '<i class="material-icons">check_box</i></a>';
+    }
+    else {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Ativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
+            '<i class="material-icons">check_box_outline_blank</i></a>';
+    }
+
+    newItem += '</li>';
+
+    $('#li-' + empresa.uid).replaceWith(newItem);
+    $('.tooltipped').tooltip();
 };
 
 Empresas.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
-    $('#div-' + uid).remove();
+    $('#li-' + uid).remove();
 };
