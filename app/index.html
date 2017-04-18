@@ -137,32 +137,34 @@
                 </ul>
             </div>
             <!--row -->
+            <!--</div>-->
+
+            <div class="fixed-action-btn">
+                <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger"
+                    data-position="left" data-tooltip="Novo usuário">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
+        <!--tabUsuarios -->
 
-        <div class="fixed-action-btn">
-            <a href="#modalUsuario" id="btnNovoUsuario" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger" data-position="left" data-tooltip="Novo usuário">
-                <i class="material-icons">add</i>
-            </a>
+        <div id="tabEmpresas" class="col s12 m12 l12">
+            <div class="row">
+                <!--aqui vem a lista de empresas-->
+                <ul class="collection" id="collectionEmpresas">
+
+                </ul>
+            </div>
+            <!--row -->
+            <!--</div>-->
+            <div class="fixed-action-btn">
+                <a href="#modalEmpresa" id="btnNovaEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped modal-trigger"
+                    data-position="left" data-tooltip="Nova empresa">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
         </div>
     </div>
-    <!--tabUsuarios -->
-
-    <div id="tabEmpresas" class="col s12 m12 l12">
-        <div class="row">
-            <!--aqui vem a lista de usuários-->
-            <ul class="collection" id="collectionEmpresas">
-
-            </ul>
-        </div>
-        <!--row -->
-    </div>
-    <div class="fixed-action-btn">
-        <a id="btnNovaEmpresa" class="btn-floating btn-large waves-effect waves-light green tooltipped" data-position="left" data-tooltip="Nova empresa">
-            <i class="material-icons">add</i>
-        </a>
-    </div>
-    </div>
-
     <!-- MODAIS -->
     <!-- Modal de Recuperação de Senha -->
     <div id="modalRecuperarSenha" class="modal">
@@ -288,7 +290,8 @@
     <!-- FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
     <!-- data tables -->
