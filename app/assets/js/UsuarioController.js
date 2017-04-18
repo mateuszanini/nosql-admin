@@ -1,5 +1,5 @@
 var UsuarioController = {
-    editar: function (uid) {
+    editar: function(uid) {
         let usuario = Usuarios[uid];
 
         $('#tituloModalUsuario').html('Editar usuário');
@@ -29,47 +29,50 @@ var UsuarioController = {
         //preenche select das empresas
         if (usuario.tipo == 'admin') {
             $("#empresaUsuario").prop('disabled', true);
-        } else {
+        }
+        else {
             $("#empresaUsuario").prop('disabled', false);
             $("#empresaUsuario").html('');
             $("#empresaUsuario").append(
                 $('<option/>')
-                    .text("Nenhuma empresa selecionada")
-                    .attr('selected', true)
-                    .attr('disabled', true)
+                .text("Nenhuma empresa selecionada")
+                .attr('selected', true)
+                .attr('disabled', true)
             );
             try {
-                $.map(Empresas, function (n, i) {
+                $.map(Empresas, function(n, i) {
                     if (typeof n == 'object' && n) {
                         if (usuario.empresas[n.uid]) {
                             $("#empresaUsuario").append(
                                 $('<option/>')
-                                    .attr('value', n.uid)
-                                    .text(n.nomeFantasia)
-                                    .attr('selected', true)
+                                .attr('value', n.uid)
+                                .text(n.nomeFantasia)
+                                .attr('selected', true)
                             );
-                        } else {
+                        }
+                        else {
                             $("#empresaUsuario").append(
                                 $('<option/>')
-                                    .attr('value', n.uid)
-                                    .text(n.nomeFantasia)
+                                .attr('value', n.uid)
+                                .text(n.nomeFantasia)
                             );
                         }
                     }
                 });
-            } catch (e) {
+            }
+            catch (e) {
                 //console.log(e);
             }
         }
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
-        $('#formUsuario').submit(function (event) {
+        $('#formUsuario').submit(function(event) {
             event.preventDefault();
             //serializa o form
             var unindexed_array = $(this).serializeArray();
             var _dados = {};
             _dados.empresas = {};
-            $.map(unindexed_array, function (n, i) {
+            $.map(unindexed_array, function(n, i) {
                 if (n['name'] == 'empresaUsuario') {
                     _dados.empresas[n['value']] = true;
                 }
@@ -84,9 +87,9 @@ var UsuarioController = {
             //relacionamento com empresas
             //verifica as empresas que precisam ser excluidas
             //transforma os objetos em arrays e verifica a diferença entre eles
-            let del = $.map(usuario.empresas, function (value, index) {
+            let del = $.map(usuario.empresas, function(value, index) {
                 return [index];
-            }).diff($.map(_dados.empresas, function (value, index) {
+            }).diff($.map(_dados.empresas, function(value, index) {
                 return [index];
             }));
             for (let i = 0; i < del.length; i++) {
@@ -95,9 +98,9 @@ var UsuarioController = {
 
             //verifica as empresas que precisam ser adicionadas
             //transforma os objetos em arrays e verifica a diferença entre eles
-            let add = $.map(_dados.empresas, function (value, index) {
+            let add = $.map(_dados.empresas, function(value, index) {
                 return [index];
-            }).diff($.map(usuario.empresas, function (value, index) {
+            }).diff($.map(usuario.empresas, function(value, index) {
                 return [index];
             }));
             for (let i = 0; i < add.length; i++) {
@@ -105,13 +108,13 @@ var UsuarioController = {
             }
 
             usuario.save()
-                .then(function () {
+                .then(function() {
                     console.log('ok');
                     $('#modalUsuario').modal('close');
                     location.reload();
                     return false;
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                     console.log(err);
                     $('#modalUsuario').modal('close');
                     return false;
@@ -120,7 +123,8 @@ var UsuarioController = {
         });
         $('#modalUsuario').modal('open');
     },
-    editarPerfil() {
+    
+    editarPerfil: function() {
         console.log("Editando...");
         let usuario = Usuarios[firebase.auth().currentUser.uid];
         $('#tituloModalUsuario').html('Editar meu perfil');
@@ -147,37 +151,38 @@ var UsuarioController = {
         $("#empresaUsuario").html('');
         $("#empresaUsuario").append(
             $('<option/>')
-                .text("Nenhuma empresa selecionada")
-                .attr('selected', true)
-                .attr('disabled', true)
+            .text("Nenhuma empresa selecionada")
+            .attr('selected', true)
+            .attr('disabled', true)
         );
         try {
-            $.map(Empresas, function (n, i) {
+            $.map(Empresas, function(n, i) {
                 if (typeof n == 'object' && n) {
                     if (usuario.empresas[n.uid]) {
                         $("#empresaUsuario").append(
                             $('<option/>')
-                                .attr('value', n.uid)
-                                .text(n.nomeFantasia)
-                                .attr('selected', true)
+                            .attr('value', n.uid)
+                            .text(n.nomeFantasia)
+                            .attr('selected', true)
                         );
                     }
                 }
             });
-        } catch (e) {
+        }
+        catch (e) {
             //console.log(e);
         }
         $("#empresaUsuario").prop('disabled', true);
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
-        $('#formUsuario').submit(function (event) {
+        $('#formUsuario').submit(function(event) {
             console.log("usuario antes");
             console.log(usuario);
             event.preventDefault();
             //serializa o form
             var unindexed_array = $(this).serializeArray();
             var _dados = {};
-            $.map(unindexed_array, function (n, i) {
+            $.map(unindexed_array, function(n, i) {
                 _dados[n['name']] = n['value'];
             });
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
@@ -187,34 +192,35 @@ var UsuarioController = {
                 if (usuario.email != _dados.emailUsuario) {
                     usuario.email = _dados.emailUsuario;
                     console.log("Alterando  o email do usuario...");
-                    firebase.auth().currentUser.updateEmail(usuario.email).then(function () {
+                    firebase.auth().currentUser.updateEmail(usuario.email).then(function() {
                         usuario.save()
-                            .then(function () {
+                            .then(function() {
                                 console.log('ok');
                                 $('#modalUsuario').modal('close');
                                 location.reload();
                                 return false;
                             })
-                            .catch(function (err) {
+                            .catch(function(err) {
                                 console.log(err);
                                 $('#modalUsuario').modal('close');
                                 return false;
                             });
-                    }, function (error) {
+                    }, function(error) {
                         console.log("Não pode alterar o email do usuario");
                         console.log(error);
                         $('#modalUsuario').modal('close');
                         return false;
                     });
-                } else {
+                }
+                else {
                     usuario.save()
-                        .then(function () {
+                        .then(function() {
                             console.log('ok');
                             $('#modalUsuario').modal('close');
                             location.reload();
                             return false;
                         })
-                        .catch(function (err) {
+                        .catch(function(err) {
                             console.log(err);
                             $('#modalUsuario').modal('close');
                             return false;
@@ -225,18 +231,18 @@ var UsuarioController = {
         });
         $('#modalUsuario').modal('open');
     },
-    alteraEstado(uid) {
+    alteraEstado: function(uid) {
         Usuarios[uid].ativo = !Usuarios[uid].ativo;
         Usuarios[uid].save()
-            .then(function () {
+            .then(function() {
                 console.log('Alterado com sucesso');
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 alert(err);
             });
     },
 
-    novo: function (event) {
+    novo: function(event) {
         if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") return false;
         // Get all the forms elements and their values in one step
 
@@ -244,7 +250,7 @@ var UsuarioController = {
         var _dados = {};
         _dados.empresas = {};
 
-        $.map(unindexed_array, function (n, i) {
+        $.map(unindexed_array, function(n, i) {
             if (n['name'] == 'empresaUsuario') {
                 _dados.empresas[n['value']] = true;
             }
@@ -264,18 +270,18 @@ var UsuarioController = {
 
         // if (_dados.uid) usu.uid = _dados.uid;
         new Usuario(usu)
-            .then(function () {
+            .then(function() {
                 console.log("Usuário criado e nova senha solicitada");
                 $('#modalUsuario').modal('close');
                 location.reload();
             })
-            .catch(function (err) {
+            .catch(function(err) {
                 console.log(err);
             });
         return false;
     },
 
-    mostraModalNovo: function () {
+    mostraModalNovo: function() {
         if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") return false;
         $('#tituloModalUsuario').html('Cadastrar usuário');
         $('#btnSalvaUsuario').html('Cadastrar');
@@ -304,16 +310,16 @@ var UsuarioController = {
         $("#empresaUsuario").html('');
         $("#empresaUsuario").append(
             $('<option/>')
-                .text("Selecione")
-                .attr('selected', true)
-                .attr('disabled', true)
+            .text("Selecione")
+            .attr('selected', true)
+            .attr('disabled', true)
         );
-        $.map(Empresas, function (n, i) {
+        $.map(Empresas, function(n, i) {
             if (typeof n == 'object' && n) {
                 $("#empresaUsuario").append(
                     $('<option/>')
-                        .attr('value', n.uid)
-                        .text(n.nomeFantasia)
+                    .attr('value', n.uid)
+                    .text(n.nomeFantasia)
                 );
             }
         });
@@ -322,16 +328,46 @@ var UsuarioController = {
 };
 
 
-Usuarios.callbackAdded = function (usuario) {
+Usuarios.callbackAdded = function(usuario) {
     if (usuario.uid == firebase.auth().currentUser.uid) {
         return;
     }
-    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
-        '<div>' +
+    if (usuario.tipo === "admin") {
+        var usuarioTipo = "Administrador";
+    }
+    else if (usuario.tipo === "gerente") {
+        var usuarioTipo = "Gerente";
+    }
+    else if (usuario.tipo === "operador") {
+        var usuarioTipo = "Operador";
+    }
+
+    var newItem = '';
+    if (usuario.ativo) {
+        newItem += '<li class="collection-item" id="li-' + usuario.uid + '">';
+    }
+    else {
+        newItem += '<li class="collection-item grey lighten-2" id="li-' + usuario.uid + '">';
+    }
+    newItem += '<div>' +
         '<span id="itemNome">' + usuario.nome + '</span>' +
         '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
-        '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
-        '<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
+        '<span class="grey-text hide-on-small-only" id="itemTipo"><i>' + usuarioTipo + '</i></span>' +
+        //Botão Editar
+        '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+        'data-position="top" data-tooltip="Editar" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">' +
+        '<i class="material-icons">mode_edit</i></a>';
+    if (usuario.ativo) {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            '<i class="material-icons">check_box</i></a>';
+    }
+    else {
+        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+            '<i class="material-icons">check_box_outline_blank</i></a>';
+    }
+    /*'<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
         '</div>' +
         '</li>' +
         '<ul id="dropdown-' + usuario.uid + '"  class="dropdown-content">' +
@@ -339,42 +375,17 @@ Usuarios.callbackAdded = function (usuario) {
         '<li><a href="javascript:void(0);"  onclick=\"UsuarioController.alteraEstado(\'' + usuario.uid + '\');">';
     if (usuario.ativo) newItem += "Inativar";
     else newItem += "Ativar";
+    
     newItem += '</a></li>' +
-        '</ul>';
-    /* var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
-         "<div class=\"card z-depth-3\">" +
-         "<div class=\"card-content\">" +
-         "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
-         "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
-         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-         //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-         //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
-     if (usuario.ativo) newCard += "Inativar";
-     else newCard += "Ativar";
-     newCard += "</a></li>" +
-         //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
-         "</ul>" +
-         "<h6>" + usuario.nome + "</h6>" +
-         "<p class=\"grey-text\">" + usuario.email + "</p>" +
-         "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
-         "</div>" +
-         "</div>" +
-         "</div>";*/
-    $('#collectionUsuarios').append(newItem);
+        '</ul>';*/
 
-    $('.dropdown-button').dropdown({
-        hover: true,
-        constrainWidth: false,
-        gutter: 0,
-        belowOrigin: false,
-        alignment: 'right'
-    });
+    $('#collectionUsuarios').append(newItem);
+    $('.tooltipped').tooltip();
 
 }
 
-Usuarios.callbackChanged = function (usuario) {
-        if (usuario.uid == firebase.auth().currentUser.uid) {
+Usuarios.callbackChanged = function(usuario) {
+    if (usuario.uid == firebase.auth().currentUser.uid) {
         return;
     }
     /*
@@ -427,7 +438,7 @@ Usuarios.callbackChanged = function (usuario) {
 
 }
 
-Usuarios.callbackRemoved = function (uid) {
+Usuarios.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
     $('#div-' + uid).remove();
 }
