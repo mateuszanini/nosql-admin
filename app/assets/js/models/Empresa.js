@@ -6,9 +6,21 @@ class Empresa {
 			if (_dados.cnpj) this.cnpj = _dados.cnpj;
 			if (_dados.inscricaoEstadual) this.inscricaoEstadual = _dados.inscricaoEstadual;
 			if (_dados.inscricaoMunicipal) this.inscricaoMunicipal = _dados.inscricaoMunicipal;
-			if (_dados.endereco) this.endereco = _dados.endereco;
-			if (_dados.telefones) this.telefones = _dados.telefones;
-			if (_dados.emails) this.emails = _dados.emails
+			if (_dados.telefone) this.telefone = _dados.telefone;
+			if (_dados.email) this.email = _dados.email;
+
+			if (_dados.endereco) {
+				this.endereco = {};
+				if (_dados.endereco.logradouro) this.endereco.logradouro = _dados.endereco.logradouro;
+				if (_dados.endereco.numero) this.endereco.numero = _dados.endereco.numero;
+				if (_dados.endereco.complemento) this.endereco.complemento = _dados.endereco.complemento;
+				if (_dados.endereco.bairro) this.endereco.bairro = _dados.endereco.bairro;
+				if (_dados.endereco.cep) this.endereco.cep = _dados.endereco.cep;
+				if (_dados.endereco.cidade) this.endereco.cidade = _dados.endereco.cidade;
+				if (_dados.endereco.estado) this.endereco.estado = _dados.endereco.estado;
+				if (_dados.endereco.pais) this.endereco.pais = _dados.endereco.pais;
+			}
+
 			//campos de controle
 			this.ativo = true;
 			if (_dados.createdAt) this.createdAt = _dados.createdAt;
@@ -20,8 +32,7 @@ class Empresa {
 
 			if (_dados.uid) {
 				this.uid = _dados.uid;
-			}
-			else {
+			} else {
 				this.uid = firebase.database().ref().child('empresas').push().key;
 				let e = this;
 				return new Promise(
@@ -33,7 +44,6 @@ class Empresa {
 						});
 					}
 				);
-
 			}
 		}
 		catch (err) {
@@ -48,31 +58,8 @@ class Empresa {
 	save() {
 		let empresa = this;
 		try {
-
-			// /*Pega instancia do firebase*/
-			// var database = firebase.database();
-			// /*Cria uma nova chave para o objeto*/
-			// var newEmpresaKey = empresa.uid
-			// if (newEmpresaKey == undefined) {
-			// 	newEmpresaKey = firebase.database().ref().child('empresas').push().key;
-			// } else {
-			// 	empresa.updatedAt = new Date().getTime();
-			// }
-			// /*Salva os dados no firebase, retornando uma promise void*/
-			// //var oldEmpresaKey = empresa.uid;
-			// /*Apaga chave para não salvar */
-			// //delete empresa.uid;
-
 			if (empresa.uid) empresa.updatedAt = new Date().getTime();
-
-			return firebase.database().ref('empresas/' + empresa.uid).set(empresa,
-				function (err) {
-					if (err == null) {
-						//empresa.uid = newEmpresaKey;
-					} else {
-						//empresa.uid = oldEmpresaKey;
-					}
-				});
+			return firebase.database().ref('empresas/' + empresa.uid).set(empresa);
 		} catch (err) {
 			return new Promise(
 				function (resolve, reject) {
