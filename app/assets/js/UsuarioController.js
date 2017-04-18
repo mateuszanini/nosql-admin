@@ -9,49 +9,57 @@ var UsuarioController = {
         //preenche o nome
         $('#nomeUsuario').val(usuario.nome);
         $('#nomeUsuario').focusin();
+
         //preenche o email
         $('#emailUsuario').val(usuario.email).prop('disabled', true);
         $('#emailUsuario').focusin();
 
         //preenche o telefone
         $('#telefoneUsuario').val(usuario.telefone);
+        $('#telefoneUsuario').focusin();
         $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
-
-        $("#tipoUsuario").attr('disabled', false);
-        $("#empresaUsuario").attr('disabled', false);
 
         //seleciona o tipo do usuario
         $('#tipoUsuario').val(usuario.tipo).change();
+        $("#tipoUsuario").prop('disabled', false);
+        if (Usuarios[firebase.auth().currentUser.uid].tipo != "admin") {
+            $("#tipoUsuario option[value='admin']").prop('disabled', true);
+        }
 
         //preenche select das empresas
-        $("#empresaUsuario").html('');
-        $("#empresaUsuario").append(
-            $('<option/>')
-                .text("Nenhuma empresa selecionada")
-                .attr('selected', true)
-                .attr('disabled', true)
-        );
-        try {
-            $.map(Empresas, function (n, i) {
-                if (typeof n == 'object' && n) {
-                    if (usuario.empresas[n.uid]) {
-                        $("#empresaUsuario").append(
-                            $('<option/>')
-                                .attr('value', n.uid)
-                                .text(n.nomeFantasia)
-                                .attr('selected', true)
-                        );
-                    } else {
-                        $("#empresaUsuario").append(
-                            $('<option/>')
-                                .attr('value', n.uid)
-                                .text(n.nomeFantasia)
-                        );
+        if (usuario.tipo == 'admin') {
+            $("#empresaUsuario").prop('disabled', true);
+        } else {
+            $("#empresaUsuario").prop('disabled', false);
+            $("#empresaUsuario").html('');
+            $("#empresaUsuario").append(
+                $('<option/>')
+                    .text("Nenhuma empresa selecionada")
+                    .attr('selected', true)
+                    .attr('disabled', true)
+            );
+            try {
+                $.map(Empresas, function (n, i) {
+                    if (typeof n == 'object' && n) {
+                        if (usuario.empresas[n.uid]) {
+                            $("#empresaUsuario").append(
+                                $('<option/>')
+                                    .attr('value', n.uid)
+                                    .text(n.nomeFantasia)
+                                    .attr('selected', true)
+                            );
+                        } else {
+                            $("#empresaUsuario").append(
+                                $('<option/>')
+                                    .attr('value', n.uid)
+                                    .text(n.nomeFantasia)
+                            );
+                        }
                     }
-                }
-            });
-        } catch (e) {
-            //console.log(e);
+                });
+            } catch (e) {
+                //console.log(e);
+            }            
         }
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
@@ -121,15 +129,19 @@ var UsuarioController = {
 
         //preenche o nome
         $('#nomeUsuario').val(usuario.nome);
+        $('#nomeUsuario').focusin();
         //preenche o email
         $('#emailUsuario').val(usuario.email).prop('disabled', false);
+        $('#emailUsuario').focusin();
+
         //preenche o telefone
         $('#telefoneUsuario').val(usuario.telefone);
+        $('#telefoneUsuario').focusin();
         $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
 
         //seleciona o tipo do usuario
         $('#tipoUsuario').val(usuario.tipo).change();
-        $("#tipoUsuario").attr('disabled', true);
+        $("#tipoUsuario").prop('disabled', true);
 
         //preenche select das empresas        
         $("#empresaUsuario").html('');
@@ -153,9 +165,9 @@ var UsuarioController = {
                 }
             });
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
-        $("#empresaUsuario").attr('disabled', true);
+        $("#empresaUsuario").prop('disabled', true);
         $('select').material_select();
         //adiciona evento para quando enviar o formulario
         $('#formUsuario').submit(function (event) {
@@ -274,14 +286,19 @@ var UsuarioController = {
 
         $('#emailUsuario').val('').prop('disabled', false);
         $('#nomeUsuario').val('');
+        $('#telefoneUsuario').val('');
+
+        $("#empresaUsuario").prop('disabled', false);
+        $("#tipoUsuario").prop('disabled', false);
+
         //preenche modal dos tipos de usuario, mostrando as opções liberadas para o usuario atual
         if (Usuarios[firebase.auth().currentUser.uid].tipo == "admin") {
-            $("#tipoUsuario option[value='admin']").attr('disabled', false);
-            $("#tipoUsuario option[value='gerente']").attr('disabled', false);
+            $("#tipoUsuario option[value='admin']").prop('disabled', false);
+            $("#tipoUsuario option[value='gerente']").prop('disabled', false);
         }
         if (Usuarios[firebase.auth().currentUser.uid].tipo == "gerente") {
-            $("#tipoUsuario option[value='admin']").attr('disabled', true);
-            $("#tipoUsuario option[value='gerente']").attr('disabled', false);
+            $("#tipoUsuario option[value='admin']").prop('disabled', true);
+            $("#tipoUsuario option[value='gerente']").prop('disabled', false);
         }
         //preenche select das empresas
         $("#empresaUsuario").html('');
@@ -306,38 +323,41 @@ var UsuarioController = {
 
 
 Usuarios.callbackAdded = function (usuario) {
-    var newItem = '<li class="collection-item" id="li-' + usuario.uid +'">' +
-                        '<div>' +
-                            '<span id="itemNome">' + usuario.nome + '</span>' +
-                            '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
-                            '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
-                            '<a href="#!" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
-                        '</div>' +
-                    '</li>' +
-                    '<ul id="dropdown-' + usuario.uid +'"  class="dropdown-content">' +
-                        '<li><a href="#!">Editar</a></li>' +
-                        '<li><a href="#!">Inativar</a></li>' +
-                    '</ul>';
-   /* var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
-        "<div class=\"card z-depth-3\">" +
-        "<div class=\"card-content\">" +
-        "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
-        "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
-        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
-    if (usuario.ativo) newCard += "Inativar";
-    else newCard += "Ativar";
-    newCard += "</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
-        "</ul>" +
-        "<h6>" + usuario.nome + "</h6>" +
-        "<p class=\"grey-text\">" + usuario.email + "</p>" +
-        "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
-        "</div>" +
-        "</div>" +
-        "</div>";*/
+    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
+        '<div>' +
+       '<span id="itemNome">' + usuario.nome + '</span>' +
+        '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
+        '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
+        '<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
+        '</div>' +
+        '</li>' +
+        '<ul id="dropdown-' + usuario.uid + '"  class="dropdown-content">' +
+        '<li><a href="javascript:void(0);" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">Editar</a></li>' +
+        '<li><a href="javascript:void(0);"  onclick=\"UsuarioController.alteraEstado(\'' + usuario.uid + '\');">';
+    if (usuario.ativo) newItem += "Inativar";
+    else newItem += "Ativar";
+    newItem += '</a></li>' +
+        '</ul>';
+    /* var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
+         "<div class=\"card z-depth-3\">" +
+         "<div class=\"card-content\">" +
+         "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
+         "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
+         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
+         //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
+         //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
+         "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
+     if (usuario.ativo) newCard += "Inativar";
+     else newCard += "Ativar";
+     newCard += "</a></li>" +
+         //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
+         "</ul>" +
+         "<h6>" + usuario.nome + "</h6>" +
+         "<p class=\"grey-text\">" + usuario.email + "</p>" +
+         "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
+         "</div>" +
+         "</div>" +
+         "</div>";*/
     $('#collectionUsuarios').append(newItem);
 
     $('.dropdown-button').dropdown({
@@ -351,29 +371,45 @@ Usuarios.callbackAdded = function (usuario) {
 }
 
 Usuarios.callbackChanged = function (usuario) {
-    console.log(usuario.nome + " alterado!");
-    var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
-        "<div class=\"card z-depth-3\">" +
-        "<div class=\"card-content\">" +
-        "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
-        "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
-        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
-        "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
-    if (usuario.ativo) newCard += "Inativar";
-    else newCard += "Ativar";
-    newCard += "</a></li>" +
-        //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
-        "</ul>" +
-        "<h6>" + usuario.nome + "</h6>" +
-        "<p class=\"grey-text\">" + usuario.email + "</p>" +
-        "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
-        "</div>" +
-        "</div>" +
-        "</div>";
+    /*
+        var newCard = "<div id=div-" + usuario.uid + " class=\"col s12 m4 l3\">" +
+            "<div class=\"card z-depth-3\">" +
+            "<div class=\"card-content\">" +
+            "<a class=\"dropdown-button btn-floating waves-effect waves-light right red \" data-activates=\"dropdown-" + usuario.uid + "\"><i class=\"material-icons\">more_vert</i></a>" +
+            "<ul id=\"dropdown-" + usuario.uid + "\" class=\"dropdown-content\"> " +
+            "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.editar('" + usuario.uid + "');\">Editar</a></li>" +
+            //"<li><a href=\"javascript:void(0);\">Alterar email</a></li>" +
+            //"<li><a href=\"javascript:void(0);\">Redefinir senha</a></li>" +
+            "<li><a href=\"javascript:void(0);\" onclick=\"UsuarioController.alteraEstado('" + usuario.uid + "');\">";
+        if (usuario.ativo) newCard += "Inativar";
+        else newCard += "Ativar";
+        newCard += "</a></li>" +
+            //"<li><a href=\"javascript:void(0);\">Excluir</a></li>" +
+            "</ul>" +
+            "<h6>" + usuario.nome + "</h6>" +
+            "<p class=\"grey-text\">" + usuario.email + "</p>" +
+            "<p class=\"grey-text\">" + usuario.tipo + "</p>" +
+            "</div>" +
+            "</div>" +
+            "</div>";
+    */
+    var newItem = '<li class="collection-item" id="li-' + usuario.uid + '">' +
+        '<div>' +
+        '<span id="itemNome">' + usuario.nome + '</span>' +
+        '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
+        '<span class="grey-text hide-on-small-only" id="itemTipo">' + usuario.tipo + '</span>' +
+        '<a href="javascript:void(0);" class="secondary-content dropdown-button btn-floating waves-effect waves-light right red lighten-1" data-activates="dropdown-' + usuario.uid + '"><i class="material-icons">more_vert</i></a>' +
+        '</div>' +
+        '</li>' +
+        '<ul id="dropdown-' + usuario.uid + '"  class="dropdown-content">' +
+        '<li><a href="javascript:void(0);" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">Editar</a></li>' +
+        '<li><a href="javascript:void(0);"  onclick=\"UsuarioController.alteraEstado(\'' + usuario.uid + '\');">';
+    if (usuario.ativo) newItem += "Inativar";
+    else newItem += "Ativar";
+    newItem += '</a></li>' +
+        '</ul>';
 
-    $('#div-' + usuario.uid).replaceWith(newCard);
+    $('#li-' + usuario.uid).replaceWith(newItem);
 
     $('.dropdown-button').dropdown({
         hover: true,
