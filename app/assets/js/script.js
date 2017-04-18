@@ -45,9 +45,13 @@ var app = {
         firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 console.log("Está logado");
-                Usuarios.findOne(user.uid).then(function(usuario) {
-                    Empresas.init(usuario);
-                    Usuarios.init(usuario);
+                Usuarios.findOne(user.uid).then(function (usuario) {
+                    Usuarios[usuario.uid] = usuario;
+                    Empresas.init();
+                    Usuarios.init();
+                    if (Usuarios[firebase.auth().currentUser.uid].tipo == "operador") {
+                        $('#btnNovoUsuario').addClass('hide');
+                    }
                     //$('#preloaderCarregando').addClass('hide');
                     app.preloader('close');
                     $('#bg').addClass('hide');
@@ -86,6 +90,20 @@ var app = {
         $("#usrLogoutMenu").click(function() {
             app.logout();
         });
+
+        $("#usrLogoutMenuColapsed").click(function () {
+            app.logout();
+        });
+
+        $("#usrLogadoMenu").click(function () {
+            UsuarioController.editarPerfil();
+        });
+
+        $("#usrLogadoMenuColapsed").click(function () {
+            UsuarioController.editarPerfil();
+        });
+
+
         //redefinir senha
         $("#btnRedefinirSenha").click(function() {
             app.redefinirSenha();

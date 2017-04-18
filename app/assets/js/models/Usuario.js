@@ -5,7 +5,7 @@ class Usuario {
 		if (_dados.nome) this.nome = _dados.nome;
 		if (_dados.tipo) this.tipo = _dados.tipo;
 		else this.tipo = "operador";
-		if (_dados.telefones) this.telefones = _dados.telefones;
+		if (_dados.telefone) this.telefone = _dados.telefone;
 		//campos de controle
 		if (_dados.ativo != undefined) {
 			this.ativo = _dados.ativo;
@@ -15,8 +15,10 @@ class Usuario {
 		else this.createdAt = new Date().getTime();
 
 		//relacionamento com empresas
-		if (_dados.empresas) this.empresas = _dados.empresas;
-		else this.empresas = {};
+		if (_dados.tipo != 'admin') {
+			if (_dados.empresas) this.empresas = _dados.empresas;
+			else this.empresas = {};
+		}
 		if (_dados.uid) this.uid = _dados.uid;
 		//se já existe um uid, significa que o usuário já foi criado no firebase
 		// e o objeto está sendo criado pelos observadores do nó usuarios
@@ -111,7 +113,8 @@ var Usuarios = {
 	callbackAdded: null,
 	callbackChanged: null,
 	callbackRemoved: null,
-	init: function (usuario) {
+	init: function () {
+		usuario = Usuarios[firebase.auth().currentUser.uid];
 		if (usuario == undefined) {
 			throw "Usuário inválido!";
 		}

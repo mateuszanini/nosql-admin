@@ -106,7 +106,8 @@ var Empresas = {
 	callbackAdded: null,
 	callbackChanged: null,
 	callbackRemoved: null,
-	init: function (usuario) {
+	init: function () {
+		usuario = Usuarios[firebase.auth().currentUser.uid];
 		if (usuario == undefined) {
 			throw "Usuário inválido!";
 		}
