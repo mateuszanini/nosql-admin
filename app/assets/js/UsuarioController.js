@@ -7,16 +7,13 @@ var UsuarioController = {
         $('#formUsuario').unbind('submit');
 
         //preenche o nome
-        $('#nomeUsuario').val(usuario.nome);
-        $('#nomeUsuario').focusin();
+        $('#nomeUsuario').val(usuario.nome).focusin();
 
         //preenche o email
-        $('#emailUsuario').val(usuario.email).prop('disabled', true);
-        $('#emailUsuario').focusin();
+        $('#emailUsuario').val(usuario.email).prop('disabled', true).focusin();
 
         //preenche o telefone
-        $('#telefoneUsuario').val(usuario.telefone);
-        $('#telefoneUsuario').focusin();
+        $('#telefoneUsuario').val(usuario.telefone).focusin();
         $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
 
         //seleciona o tipo do usuario
@@ -79,7 +76,7 @@ var UsuarioController = {
             });
             if (_dados.nomeUsuario != "") usuario.nome = _dados.nomeUsuario;
             if (_dados.tipoUsuario != "") usuario.tipo = _dados.tipoUsuario;
-            if (_dados.telefoneUsuario) usuario.telefone = _dados.telefoneUsuario;
+            usuario.telefone = _dados.telefoneUsuario;
 
             //relacionamento com empresas
             //verifica as empresas que precisam ser excluidas
@@ -128,15 +125,12 @@ var UsuarioController = {
         $('#formUsuario').unbind('submit');
 
         //preenche o nome
-        $('#nomeUsuario').val(usuario.nome);
-        $('#nomeUsuario').focusin();
+        $('#nomeUsuario').val(usuario.nome).focusin();
         //preenche o email
-        $('#emailUsuario').val(usuario.email).prop('disabled', false);
-        $('#emailUsuario').focusin();
+        $('#emailUsuario').val(usuario.email).prop('disabled', false).focusin();
 
         //preenche o telefone
-        $('#telefoneUsuario').val(usuario.telefone);
-        $('#telefoneUsuario').focusin();
+        $('#telefoneUsuario').val(usuario.telefone).focusin();
         $('#chamarUsuario').attr("href", "tel:" + usuario.telefone);
 
         //seleciona o tipo do usuario
