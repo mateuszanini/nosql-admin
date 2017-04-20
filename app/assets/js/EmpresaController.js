@@ -132,8 +132,6 @@ var EmpresaController = {
         if (_dados.pais) empresa.endereco.pais = _dados.pais;
 
 
-
-
         console.log(empresa);
         new Empresa(empresa)
             .then(function() {
@@ -171,6 +169,21 @@ var EmpresaController = {
         $('#paisEmpresa').val('');
 
         $('#modalEmpresa').modal('open');
+    },
+
+    //Mostra usuarios dessa empresa
+    mostraUsuarios: function(uid) {
+        $('#collectionUsuariosModal').html('');
+        for (let usu in Empresas[uid].usuarios) {
+            UsuarioController.mostraUsuario({
+                usuario: Usuarios[usu],
+                novo: true,
+                modal: true
+            });
+        }
+
+        $('#tituloModalUsuarioEmpresa').html("Usuários da empresa <b> " + Empresas[uid].nomeFantasia + "</b>");
+        $('#modalUsuarioEmpresa').modal('open');
     }
 };
 
@@ -204,6 +217,10 @@ Empresas.callbackAdded = function(empresa) {
             'data-position="top" data-tooltip="Ativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
+
+    newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped hide-on-small-only"' +
+        'data-position="top" data-tooltip="Usuários" onclick="EmpresaController.mostraUsuarios(\'' + empresa.uid + '\');">' +
+        '<i class="material-icons">person</i></a>';
 
     newItem += '</li>';
 
@@ -240,6 +257,10 @@ Empresas.callbackChanged = function(empresa) {
             'data-position="top" data-tooltip="Ativar" onclick="EmpresaController.alteraEstado(\'' + empresa.uid + '\');">' +
             '<i class="material-icons">check_box_outline_blank</i></a>';
     }
+
+    newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped hide-on-small-only"' +
+        'data-position="top" data-tooltip="Usuários" onclick="EmpresaController.mostraUsuarios(\'' + empresa.uid + '\');">' +
+        '<i class="material-icons">person</i></a>';
 
     newItem += '</li>';
 

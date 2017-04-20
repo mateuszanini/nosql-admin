@@ -28,23 +28,6 @@
 
     <!-- TELA DE LOGIN -->
     <div class="blue lighten-1" id="bg">
-        <!-- Indicador de carregamento 
-        <div class="row center-align" id="preloaderCarregando">
-            <div class="preloader-wrapper active">
-                <div class="spinner-layer spinner-red-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-
         <!-- Painel de login -->
         <div class="row hide" id="painelLogin">
             <div class="col s12 m6 l4 offset-m3 offset-l4">
@@ -123,8 +106,8 @@
             </div>
             <div class="nav-content">
                 <ul class="tabs tabs-transparent">
-                    <li class="tab col s6 m6 l6"><a class="active" href="#tabUsuarios"><i class="material-icons left">person</i>Usuários</a></li>
-                    <li class="tab col s6 m6 l6"><a href="#tabEmpresas"><i class="material-icons left">work</i>Empresas</a></li>
+                    <li class="tab col s6 m6 l6"><a href="#tabUsuarios"><i class="material-icons left">person</i>Usuários</a></li>
+                    <li class="tab col s6 m6 l6"><a class="active" href="#tabEmpresas"><i class="material-icons left">work</i>Empresas</a></li>
                 </ul>
             </div>
         </nav>
@@ -155,7 +138,7 @@
                 </a>
             </div>
         </div>
-        
+
     </div>
 
     <!-- MODAIS -->
@@ -313,6 +296,21 @@
         </form>
     </div>
     <!-- FIM DO MODAL EMPRESA-->
+
+    <!-- Modal usuários de uma empresa -->
+    <div id="modalUsuarioEmpresa" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h5 id="tituloModalUsuarioEmpresa"></h5>
+            <div class="row">
+                <ul class="collection" id="collectionUsuariosModal">
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-light btn-flat">Ok</a>
+        </div>
+    </div>
 
     <!-- Modal Preloader -->
     <div id="modalPreloader" class="modal valign-wrapper col l2 m3">

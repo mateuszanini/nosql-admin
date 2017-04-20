@@ -230,7 +230,7 @@ var UsuarioController = {
         }
 
         $("#btnAlteraEstado").unbind('click');
-        
+
         $("#btnAlteraEstado").click(function() {
             $('#modalAtivo').modal('close');
             app.preloader('open');
@@ -245,7 +245,7 @@ var UsuarioController = {
                     app.preloader('close');
                 });
         });
-        
+
         $('#modalAtivo').modal('open');
     },
 
@@ -331,60 +331,128 @@ var UsuarioController = {
             }
         });
         $('select').material_select();
+    },
+
+
+    /**
+     * Método que mostra o usuario na tela
+     * Recebe como parametro um objeto:
+     * dados = {
+         usuario: Usuario,
+         novo: true | false,
+         modal: true | false
+     }
+     */
+    mostraUsuario: function(dados) {
+        console.log(dados);
+
+        let usuario = dados.usuario;
+        let novo = dados.novo != undefined ? dados.novo : false;
+        let modal = dados.modal != undefined ? dados.modal : false;
+
+
+        if (usuario.uid == firebase.auth().currentUser.uid) {
+            return;
+        }
+
+        $('.tooltipped').tooltip('remove');
+
+        if (usuario.tipo === "admin") {
+            var usuarioTipo = "Administrador";
+        }
+        else if (usuario.tipo === "gerente") {
+            var usuarioTipo = "Gerente";
+        }
+        else if (usuario.tipo === "operador") {
+            var usuarioTipo = "Operador";
+        }
+
+        var newItem = '';
+        if (usuario.ativo) {
+            if (modal) {
+                newItem += '<li class="collection-item" id="liModal-' + usuario.uid + '">';
+            }
+            else {
+                newItem += '<li class="collection-item" id="li-' + usuario.uid + '">';
+            }
+        }
+        else {
+            if (modal) {
+                newItem += '<li class="collection-item grey lighten-2" id="liModal-' + usuario.uid + '">';
+            }
+            else {
+                newItem += '<li class="collection-item grey lighten-2" id="li-' + usuario.uid + '">';
+            }
+        }
+
+        newItem += '<div>' +
+            '<span>' + usuario.nome + '</span>' +
+            '<span class="grey-text hide-on-med-and-down">' + usuario.email + '</span>' +
+            '<span class="grey-text hide-on-small-only"><i>' + usuarioTipo + '</i></span>' +
+            //Botão Editar
+            '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+            'data-position="top" data-tooltip="Editar" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">' +
+            '<i class="material-icons">mode_edit</i></a>';
+        if (usuario.ativo) {
+            newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+                'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+                '<i class="material-icons">check_box</i></a>';
+        }
+        else {
+            newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
+                'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
+                '<i class="material-icons">check_box_outline_blank</i></a>';
+        }
+
+        newItem += '</li>';
+
+        if (novo) {
+            if (modal) {
+                $('#collectionUsuariosModal').append(newItem);
+            }
+            else {
+                $('#collectionUsuarios').append(newItem);
+            }
+        }
+        else {
+            if (modal) {
+                $('#liModal-' + usuario.uid).replaceWith(newItem);
+            }
+            else {
+                $('#li-' + usuario.uid).replaceWith(newItem);
+            }
+        }
+
+        $('.tooltipped').tooltip();
+
     }
 };
 
 
 Usuarios.callbackAdded = function(usuario) {
-    if (usuario.uid == firebase.auth().currentUser.uid) {
-        return;
-    }
+    UsuarioController.mostraUsuario({
+        usuario: usuario,
+        novo: true
+    });
+    UsuarioController.mostraUsuario({
+        usuario: usuario,
+        novo: true,
+        modal: true
+    });
+};
 
-    $('.tooltipped').tooltip('remove');
-
-    if (usuario.tipo === "admin") {
-        var usuarioTipo = "Administrador";
-    }
-    else if (usuario.tipo === "gerente") {
-        var usuarioTipo = "Gerente";
-    }
-    else if (usuario.tipo === "operador") {
-        var usuarioTipo = "Operador";
-    }
-
-    var newItem = '';
-    if (usuario.ativo) {
-        newItem += '<li class="collection-item" id="li-' + usuario.uid + '">';
-    }
-    else {
-        newItem += '<li class="collection-item grey lighten-2" id="li-' + usuario.uid + '">';
-    }
-    newItem += '<div>' +
-        '<span id="itemNome">' + usuario.nome + '</span>' +
-        '<span class="grey-text hide-on-med-and-down" id="itemEmail">' + usuario.email + '</span>' +
-        '<span class="grey-text hide-on-small-only" id="itemTipo"><i>' + usuarioTipo + '</i></span>' +
-        //Botão Editar
-        '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-        'data-position="top" data-tooltip="Editar" onclick="UsuarioController.editar(\'' + usuario.uid + '\');">' +
-        '<i class="material-icons">mode_edit</i></a>';
-    if (usuario.ativo) {
-        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Inativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
-            '<i class="material-icons">check_box</i></a>';
-    }
-    else {
-        newItem += '<a class="secondary-content waves-effect waves-light btn-flat tooltipped"' +
-            'data-position="top" data-tooltip="Ativar" onclick="UsuarioController.alteraEstado(\'' + usuario.uid + '\');">' +
-            '<i class="material-icons">check_box_outline_blank</i></a>';
-    }
-
-    newItem += '</li>';
-
-    $('#collectionUsuarios').append(newItem);
-    $('.tooltipped').tooltip();
-
-}
-
+Usuarios.callbackChanged = function(usuario) {
+    UsuarioController.mostraUsuario({
+        usuario: usuario,
+        novo: false
+    });
+    UsuarioController.mostraUsuario({
+        usuario: usuario,
+        novo: false,
+        modal: true
+    });
+};
+/*
 Usuarios.callbackChanged = function(usuario) {
     if (usuario.uid == firebase.auth().currentUser.uid) {
         return;
@@ -434,6 +502,7 @@ Usuarios.callbackChanged = function(usuario) {
     $('.tooltipped').tooltip();
 
 }
+*/
 
 Usuarios.callbackRemoved = function(uid) {
     console.log('removendo: ' + uid);
